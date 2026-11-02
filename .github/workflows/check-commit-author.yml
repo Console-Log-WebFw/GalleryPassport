@@ -1,0 +1,42 @@
+# check-commit-author.yml: PR과 main 에 AI 도구 표시(작성자, 공동 작성자 줄)가 들어가지 않게 검사한다.
+name: check-commit-author
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-commit-author:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 전체 커밋 기록을 받아야 범위를 검사할 수 있음
+
+      # PR: 이번 PR에서 새로 만든 커밋만 검사
+      - name: 커밋 검사 (PR)
+        if: github.event_name == 'pull_request'
+        run: bash .github/scripts/check-commit-author.sh "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+
+      # PR 제목과 본문에 붙는 Claude 문구 검사 (값은 환경변수로만 전달)
+      - name: PR 제목/본문 검사
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if printf '%s\n%s\n' "$PR_TITLE" "$PR_BODY" | grep -iE 'generated (with|by) \[?claude|claude\.ai/code|co-authored-by:.*(claude|anthropic)'; then
+            echo "✗ PR 제목이나 본문에 Claude 문구가 있습니다. 해당 줄을 지워 주세요."
+            exit 1
+          fi
+          echo "✓ PR 제목/본문 깨끗함"
+
+      # main 에 올라갈 때: 기록 전체 검사 (직접 푸시나 병합 후 확인용)
+      - name: main 전체 기록 검사 (push)
+        if: github.event_name == 'push'
+        run: bash .github/scripts/check-commit-author.sh HEAD
