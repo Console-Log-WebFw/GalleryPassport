@@ -5,6 +5,9 @@
   position: relative;  /* 배경을 이 영역 안에 가두기 */
   isolation: isolate;  /* 배경이 영역 밖으로 빠지지 않게 하기 */
   min-height: calc(100vh - var(--header-height, 0px)); /* 헤더 높이만큼 빼기 */
+  display: flex;               /* 안쪽 내용(지구본)을 가운데 정렬하기 위해 */
+  align-items: center;         /* 세로 가운데 */
+  justify-content: center;     /* 가로 가운데 */
 }
 
 /* 홈 화면 배경 이미지: bg1.png를 영역 전체에 깔기 */
