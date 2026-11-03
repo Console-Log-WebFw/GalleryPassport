@@ -1,0 +1,74 @@
+/* MuseumCard.css: 지구본 위 박물관 카드 스타일 */
+
+.museum-card {
+  position: absolute;
+  right: 32px;
+  bottom: 32px;
+  z-index: 10;
+  width: min(320px, calc(100% - 32px));
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  color: #222;
+}
+
+.museum-card-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: 0;
+  background: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.museum-card-place {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.museum-card-name {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+.museum-card-name-en {
+  margin: 2px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.museum-card-desc {
+  margin: 12px 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.museum-card-visit {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  background: #1f4d3a;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.museum-card-visit:hover {
+  background: #173b2c;
+}
+
+/* 좁은 화면: 아래쪽 가운데 */
+@media (max-width: 600px) {
+  .museum-card {
+    right: 16px;
+    bottom: 16px;
+  }
+}

@@ -1,0 +1,15 @@
+/* GalleryRoom.css: 전시실(room-gallery) 스타일 - 겹침 순서 조정 + 정면 작품은 클릭할 수 있다는 표시 */
+
+/* room-gallery 기본 z-index(1000)가 미니맵·헤더 펼침 메뉴를 덮어서 낮춤 */
+.gallery-room .room-gallery {
+  z-index: 1;
+}
+
+.gallery-room .room-item.item-active .item-image {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.gallery-room .room-item.item-active .item-image:hover {
+  transform: scale(1.02);
+}

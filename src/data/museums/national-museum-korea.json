@@ -8,114 +8,150 @@
   "coverImage": "",
   "roomStyles": {},
   "roomSettings": {},
-  "artworks": [
+  "rooms": [
     {
-      "id": "national-museum-korea-01",
-      "title": "작품 제목 1",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
+      "id": "room-1",
+      "name": "1전시실",
+      "map": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "artworks": [
+        {
+          "id": "national-museum-korea-01",
+          "title": "작품 제목 1",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        },
+        {
+          "id": "national-museum-korea-02",
+          "title": "작품 제목 2",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        },
+        {
+          "id": "national-museum-korea-03",
+          "title": "작품 제목 3",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        }
+      ]
     },
     {
-      "id": "national-museum-korea-02",
-      "title": "작품 제목 2",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
+      "id": "room-2",
+      "name": "2전시실",
+      "map": {
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "artworks": [
+        {
+          "id": "national-museum-korea-04",
+          "title": "작품 제목 4",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        },
+        {
+          "id": "national-museum-korea-05",
+          "title": "작품 제목 5",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        },
+        {
+          "id": "national-museum-korea-06",
+          "title": "작품 제목 6",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        }
+      ]
     },
     {
-      "id": "national-museum-korea-03",
-      "title": "작품 제목 3",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
-    },
-    {
-      "id": "national-museum-korea-04",
-      "title": "작품 제목 4",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
-    },
-    {
-      "id": "national-museum-korea-05",
-      "title": "작품 제목 5",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
-    },
-    {
-      "id": "national-museum-korea-06",
-      "title": "작품 제목 6",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
-    },
-    {
-      "id": "national-museum-korea-07",
-      "title": "작품 제목 7",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
-    },
-    {
-      "id": "national-museum-korea-08",
-      "title": "작품 제목 8",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
-    },
-    {
-      "id": "national-museum-korea-09",
-      "title": "작품 제목 9",
-      "titleEn": "",
-      "artist": "",
-      "year": "",
-      "medium": "",
-      "description": "",
-      "docent": "",
-      "image": "",
-      "credit": ""
+      "id": "room-3",
+      "name": "3전시실",
+      "map": {
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "artworks": [
+        {
+          "id": "national-museum-korea-07",
+          "title": "작품 제목 7",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        },
+        {
+          "id": "national-museum-korea-08",
+          "title": "작품 제목 8",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        },
+        {
+          "id": "national-museum-korea-09",
+          "title": "작품 제목 9",
+          "titleEn": "",
+          "artist": "",
+          "year": "",
+          "medium": "",
+          "description": "",
+          "docent": "",
+          "image": "",
+          "credit": ""
+        }
+      ]
     }
   ]
 }

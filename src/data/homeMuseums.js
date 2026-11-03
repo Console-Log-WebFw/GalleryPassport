@@ -16,7 +16,7 @@ const homeMuseums = [
     lng: -73.9783,
   },
   {
-    id: "national-museum-of-korea",
+    id: "national-museum-korea",
     name: "국립중앙박물관",
     country: "한국",
     lat: 37.5239,

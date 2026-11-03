@@ -1,0 +1,102 @@
+/* GalleryMinimap.css: 미니맵 스타일 - 전시관 오른쪽 위에 떠 있는 반투명 패널 */
+
+.gallery-minimap {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20; /* room-gallery 위에 */
+  width: 200px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+}
+
+.gallery-minimap-title {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #777;
+}
+
+.gallery-minimap-grid {
+  display: grid;
+  grid-auto-rows: 44px;
+  gap: 4px;
+}
+
+.gallery-minimap-room {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 2px;
+  border: 1px solid #c9c1b5;
+  border-radius: 4px;
+  background: #f6f2ef;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gallery-minimap-room:hover {
+  background: #ebe4dc;
+}
+
+/* 지금 있는 방 */
+.gallery-minimap-room.is-current {
+  border-color: #1f4d3a;
+  background: #1f4d3a;
+  color: #fff;
+  cursor: default;
+}
+
+.gallery-minimap-name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gallery-minimap-count {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* 현재 위치 점 */
+.gallery-minimap-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffcf5c;
+  box-shadow: 0 0 0 3px rgba(255, 207, 92, 0.35);
+}
+
+/* 좁은 화면: 패널을 내용 크기에 맞추고 글자를 줄임 */
+@media (max-width: 600px) {
+  .gallery-minimap {
+    width: auto;
+    min-width: 120px;
+    max-width: calc(100% - 24px);
+    padding: 8px;
+  }
+
+  .gallery-minimap-grid {
+    grid-auto-rows: 36px;
+  }
+
+  .gallery-minimap-room {
+    min-width: 48px;
+    min-height: 36px;
+  }
+
+  .gallery-minimap-name {
+    font-size: 11px;
+  }
+}

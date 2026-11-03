@@ -1,0 +1,80 @@
+/* GalleryHeader.css: 전시관 공통 헤더 기본 스타일 - 박물관별 파일에서 덮어써서 꾸밈 */
+
+.gallery-header {
+  position: relative;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* 가운데 제목이 항상 정중앙 */
+  align-items: center;
+  height: var(--gallery-top-height);
+  padding: 0 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  color: #222;
+}
+
+.gallery-header-back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: inherit;
+  transition: background 0.2s ease;
+}
+
+.gallery-header-back:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.gallery-header-back svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gallery-header-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.gallery-header-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.gallery-header-name-en {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.gallery-header-room {
+  justify-self: end;
+  padding: 3px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  font-size: 12px;
+  color: #555;
+}
+
+/* 좁은 화면: 영문명 숨김 */
+@media (max-width: 600px) {
+  .gallery-header-name-en {
+    display: none;
+  }
+}
