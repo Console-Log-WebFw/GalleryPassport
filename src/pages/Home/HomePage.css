@@ -10,7 +10,7 @@
   justify-content: center;     /* 가로 가운데 */
 }
 
-/* 홈 화면 배경 이미지: bg1.png를 영역 전체에 깔기 */
+/* 홈 화면 배경 이미지 */
 .home-bg {
   position: absolute;
   inset: 0;                    /* 부모 영역 전체를 덮기 */

@@ -3,7 +3,7 @@
 import "./HomePage.css";
 import GlobeView from "./components/GlobeView";
 
-/* 홈 화면 컴포넌트: 배경(home-bg) + 가운데 지구본 (네비게이션은 이후 단계에서 추가) */
+/* 홈 화면 컴포넌트: 배경(home-bg) + 가운데 지구본 */
 const HomePage = () => (
   <section className="home">
     <div className="home-bg"></div>
