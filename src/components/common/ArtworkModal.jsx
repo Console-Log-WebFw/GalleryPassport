@@ -1,12 +1,13 @@
-/* ArtworkModal.jsx: 작품 상세 모달 - 큰 이미지 + 작품 정보·작품 설명·도슨트, 이전/다음 작품 이동 */
+/* ArtworkModal.jsx: 작품 상세 모달(기본) - 큰 이미지 + 작품 정보·작품 설명·도슨트, 이전/다음 작품 이동
+   박물관별 모달은 src/pages/Gallery/modals/ 에서 이 모달을 감싸거나(className) 직접 만듦 */
 
-import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import useEscapeKey from "../../hooks/useEscapeKey";
 import { getArtworkImage } from "../../utils/artworkImage";
 import "./ArtworkModal.css";
 
-/* 설명 글: 빈 줄(줄바꿈 두 번)마다 문단으로 나눔, 비어 있으면 안내 문구 */
-const Paragraphs = ({ text }) => {
+/* 설명 글: 빈 줄(줄바꿈 두 번)마다 문단으로 나눔, 비어 있으면 안내 문구 - 박물관별 모달에서도 사용 */
+export const Paragraphs = ({ text }) => {
   const paragraphs = (text || "").split(/\n\s*\n/).filter((p) => p.trim());
   if (paragraphs.length === 0) {
     return <p className="artwork-modal-empty">설명 준비 중입니다.</p>;
@@ -14,15 +15,9 @@ const Paragraphs = ({ text }) => {
   return paragraphs.map((p, i) => <p key={i}>{p.trim()}</p>);
 };
 
-const ArtworkModal = ({ artwork, onClose, onPrev, onNext }) => {
-  /* ESC 키로 닫기 - 모달이 사라지면 이벤트도 해제 */
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+/* className: 박물관별 모달 파일에서 "artwork-modal--{id}" 를 넘겨 디자인을 따로 입힘 */
+const ArtworkModal = ({ artwork, onClose, onPrev, onNext, className = "" }) => {
+  useEscapeKey(onClose); // ESC 키로 닫기
 
   if (!artwork) return null;
 
@@ -35,7 +30,7 @@ const ArtworkModal = ({ artwork, onClose, onPrev, onNext }) => {
 
   /* createPortal: 갤러리 안이 아니라 body 맨 위에 띄움 */
   return createPortal(
-    <div className="artwork-modal-backdrop" onClick={onClose}>
+    <div className={`artwork-modal-backdrop ${className}`} onClick={onClose}>
       {/* 안쪽 클릭은 배경 클릭(닫기)으로 전달되지 않게 막음 */}
       <div
         className="artwork-modal"

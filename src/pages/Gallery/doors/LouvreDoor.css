@@ -1,0 +1,78 @@
+/* LouvreDoor.css: 루브르 아치형 양문 모양 */
+
+.louvre-door {
+  aspect-ratio: 1 / 1.6;
+}
+
+/* 금색 명판 */
+.louvre-door-plaque {
+  margin-bottom: 5%;
+  padding: 5px 20px;
+  border: 1px solid #f3d98a;
+  background: linear-gradient(135deg, #a8792a, #f3d98a 45%, #b8892f);
+  color: #2a1a0a;
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* 아치 + 금색 몰딩 */
+.louvre-door-arch {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 84%;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 10px solid #c39a3e;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 26% 26% 0 0;
+  perspective: 900px;
+  box-shadow: 0 0 0 3px #7a5a1c, 0 0 24px rgba(0, 0, 0, 0.4);
+}
+
+/* 문 너머 밝은 방 */
+.louvre-door-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 80%, #fff6dc, #e9cf95 75%);
+}
+
+/* 문짝: 짙은 나무 + 금색 테두리 장식 판 */
+.louvre-door-leaf {
+  position: relative;
+  flex: 1;
+  background: linear-gradient(90deg, #4a2a18, #3a2012);
+  transition: transform 0.7s ease;
+}
+
+.louvre-door-leaf::before {
+  content: "";
+  position: absolute;
+  inset: 22% 16% 8%;
+  border: 2px solid rgba(232, 201, 106, 0.8);
+  box-shadow: inset 0 0 0 6px rgba(232, 201, 106, 0.15);
+}
+
+.louvre-door-leaf--left {
+  transform-origin: left center;
+  transform: rotateY(-14deg);
+}
+
+.louvre-door-leaf--right {
+  transform-origin: right center;
+  transform: rotateY(14deg);
+}
+
+/* 마우스를 올리면 양쪽으로 활짝 */
+.wall-door.louvre-door:hover .louvre-door-leaf--left {
+  transform: rotateY(-70deg);
+}
+
+.wall-door.louvre-door:hover .louvre-door-leaf--right {
+  transform: rotateY(70deg);
+}

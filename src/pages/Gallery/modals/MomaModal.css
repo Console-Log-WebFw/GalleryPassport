@@ -1,0 +1,83 @@
+/* MomaModal.css: MoMA 작품 모달 모양 - 미술관 벽 라벨처럼 흰 바탕 + 검정 굵은 산세리프 (기본 모달 위에 덮어씀) */
+
+.artwork-modal--moma {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.artwork-modal--moma .artwork-modal {
+  border-radius: 0;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #111;
+}
+
+/* 그림 영역: 회색 배경 없이 넓은 여백 */
+.artwork-modal--moma .artwork-modal-visual {
+  padding: 48px;
+  background: #fff;
+}
+
+.artwork-modal--moma .artwork-modal-body {
+  padding: 56px 40px 32px;
+  border-left: 1px solid #111;
+}
+
+.artwork-modal--moma .artwork-modal-title {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.artwork-modal--moma .artwork-modal-title-en {
+  color: #555;
+}
+
+/* 작가·연도·재료: 라벨 없이 굵기만 다른 벽 라벨 느낌 */
+.artwork-modal--moma .artwork-modal-info {
+  border-top: 2px solid #111;
+  border-bottom: 0;
+}
+
+.artwork-modal--moma .artwork-modal-info dt {
+  display: none;
+}
+
+.artwork-modal--moma .artwork-modal-info div:first-child dd {
+  font-weight: 700;
+}
+
+.artwork-modal--moma .artwork-modal-section h3 {
+  color: #111;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* 이전/다음: 검정 띠 */
+.artwork-modal--moma .artwork-modal-nav {
+  border-top: 0;
+  background: #111;
+}
+
+.artwork-modal--moma .artwork-modal-nav button {
+  color: #fff;
+  font-weight: 700;
+}
+
+.artwork-modal--moma .artwork-modal-nav button:hover {
+  background: #333;
+}
+
+@media (max-width: 720px) {
+  .artwork-modal--moma .artwork-modal-visual {
+    padding: 24px;
+  }
+
+  .artwork-modal--moma .artwork-modal-body {
+    padding: 24px 20px;
+    border-left: 0;
+    border-top: 1px solid #111;
+  }
+}

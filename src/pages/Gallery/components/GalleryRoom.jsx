@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { RoomGallery } from "room-gallery"; // default import는 Vite에서 객체로 들어와서 이름으로 가져옴
 import "room-gallery/build/RoomGallery.css";
-import ArtworkModal from "../../../components/common/ArtworkModal";
 import { getArtworkImage } from "../../../utils/artworkImage";
 import { buildWalls } from "../../../utils/roomLayout";
-import WallDoor from "./WallDoor";
+import { getGalleryDoor } from "../doors"; // 박물관별 문 (doors 폴더)
+import { getArtworkModal } from "../modals"; // 박물관별 작품 모달 (modals 폴더)
 import "./GalleryRoom.css";
 
 /* room-gallery 기본 설정 - 박물관 JSON의 roomStyles / roomSettings 가 이 값을 덮어씀 (벽·바닥·액자는 interiors 폴더 CSS) */
@@ -35,6 +35,8 @@ const GalleryRoom = ({ museum, room, facing, onDoor, onFacingChange }) => {
   const wrapRef = useRef(null);
   const [modalIndex, setModalIndex] = useState(null); // 모달에 보여줄 작품 번호 (null = 닫힘)
   const { artworks } = room;
+  const Door = getGalleryDoor(museum.id);
+  const Modal = getArtworkModal(museum.id);
 
   /* 벽 목록 (작품 / 문 / 빈 벽) - 문 방향은 미니맵 배치(map)로 계산 */
   const walls = useMemo(() => buildWalls(museum.rooms, room), [museum, room]);
@@ -52,11 +54,11 @@ const GalleryRoom = ({ museum, room, facing, onDoor, onFacingChange }) => {
           };
         }
         if (wall.type === "door") {
-          return { title: wall.door.name, element: <WallDoor room={wall.door} /> };
+          return { title: wall.door.name, element: <Door room={wall.door} /> };
         }
         return { title: "", element: <div className="wall-empty" /> };
       }),
-    [walls],
+    [walls, Door],
   );
   const styles = useMemo(
     () => ({ ...DEFAULT_ROOM_STYLES, ...museum.roomStyles }),
@@ -138,7 +140,7 @@ const GalleryRoom = ({ museum, room, facing, onDoor, onFacingChange }) => {
       />
 
       {modalIndex !== null && (
-        <ArtworkModal
+        <Modal
           artwork={artworks[modalIndex]}
           onClose={() => setModalIndex(null)}
           onPrev={() => moveModal(-1)}
