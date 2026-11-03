@@ -1,9 +1,18 @@
-/* ArtworkModal.jsx: 작품 상세 모달 - 큰 이미지 + 작품 설명/도슨트, 이전/다음 작품 이동 */
+/* ArtworkModal.jsx: 작품 상세 모달 - 큰 이미지 + 작품 정보·작품 설명·도슨트, 이전/다음 작품 이동 */
 
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { getArtworkImage } from "../../utils/artworkImage";
 import "./ArtworkModal.css";
+
+/* 설명 글: 빈 줄(줄바꿈 두 번)마다 문단으로 나눔, 비어 있으면 안내 문구 */
+const Paragraphs = ({ text }) => {
+  const paragraphs = (text || "").split(/\n\s*\n/).filter((p) => p.trim());
+  if (paragraphs.length === 0) {
+    return <p className="artwork-modal-empty">설명 준비 중입니다.</p>;
+  }
+  return paragraphs.map((p, i) => <p key={i}>{p.trim()}</p>);
+};
 
 const ArtworkModal = ({ artwork, onClose, onPrev, onNext }) => {
   /* ESC 키로 닫기 - 모달이 사라지면 이벤트도 해제 */
@@ -17,7 +26,12 @@ const ArtworkModal = ({ artwork, onClose, onPrev, onNext }) => {
 
   if (!artwork) return null;
 
-  const info = [artwork.artist, artwork.year, artwork.medium].filter(Boolean);
+  /* 작품 정보 표 (값이 있는 것만) */
+  const info = [
+    ["작가", artwork.artist],
+    ["연도", artwork.year],
+    ["재료", artwork.medium],
+  ].filter(([, value]) => value);
 
   /* createPortal: 갤러리 안이 아니라 body 맨 위에 띄움 */
   return createPortal(
@@ -39,29 +53,41 @@ const ArtworkModal = ({ artwork, onClose, onPrev, onNext }) => {
           ×
         </button>
 
-        <img
-          className="artwork-modal-image"
-          src={getArtworkImage(artwork.image)}
-          alt={artwork.title}
-        />
+        <div className="artwork-modal-visual">
+          <img
+            className="artwork-modal-image"
+            src={getArtworkImage(artwork.image)}
+            alt={artwork.title}
+          />
+        </div>
 
         <div className="artwork-modal-body">
           <h2 className="artwork-modal-title">{artwork.title}</h2>
           {artwork.titleEn && (
             <p className="artwork-modal-title-en">{artwork.titleEn}</p>
           )}
+
           {info.length > 0 && (
-            <p className="artwork-modal-info">{info.join(" · ")}</p>
+            <dl className="artwork-modal-info">
+              {info.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
           )}
-          {artwork.description && (
-            <p className="artwork-modal-desc">{artwork.description}</p>
-          )}
-          {artwork.docent && (
-            <div className="artwork-modal-docent">
-              <h3>도슨트</h3>
-              <p>{artwork.docent}</p>
-            </div>
-          )}
+
+          <section className="artwork-modal-section">
+            <h3>작품 설명</h3>
+            <Paragraphs text={artwork.description} />
+          </section>
+
+          <section className="artwork-modal-section">
+            <h3>도슨트</h3>
+            <Paragraphs text={artwork.docent} />
+          </section>
+
           {artwork.credit && (
             <p className="artwork-modal-credit">{artwork.credit}</p>
           )}

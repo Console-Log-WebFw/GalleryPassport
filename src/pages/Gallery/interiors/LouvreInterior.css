@@ -1,0 +1,27 @@
+/* LouvreInterior.css: 루브르 전시관 인테리어 - 짙은 와인색 벽, 헤링본 마루, 금색 액자와 넓은 여백 */
+
+.gallery--louvre {
+  /* ----- 방 (room-gallery) ----- */
+  --room-light-wall-background: linear-gradient(180deg, #742630 0%, #5c1b23 100%); /* 벽 */
+  --room-light-body-background: #661f28; /* 벽 뒤 배경 - 벽과 비슷한 색으로 (틈이 생겨도 티 안 나게) */
+  --room-light-ceil-background: linear-gradient(#f2e7cf, #e4d3ad); /* 천장 */
+  --room-light-floor-background: repeating-linear-gradient(45deg, #8a5a33 0 22px, #74492a 22px 44px), #8a5a33; /* 바닥 */
+  --room-light-wall-shadow: 0 0 60px rgba(0, 0, 0, 0.25), 0 0 140px rgba(0, 0, 0, 0.35) inset;
+  --room-light-text-color: #f3e6c8; /* 작품 제목 글자 */
+
+  /* ----- 액자 ----- */
+  --frame-color: #c39a3e; /* 테두리 색 */
+  --frame-border-image: linear-gradient(135deg, #a8792a, #f3d98a 30%, #b8892f 55%, #e8c96a 80%, #9a6e22) 1; /* 금색 */
+  --frame-width: 18px; /* 테두리 두께 */
+  --frame-mat-color: #f5eedf; /* 그림과 테두리 사이 여백 색 */
+  --frame-mat-size: 26px; /* 여백 두께 */
+  --frame-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+
+  /* ----- 문 ----- */
+  --door-frame-color: #b8892f;
+  --door-leaf-color: linear-gradient(90deg, #4a2a18, #3a2012);
+  --door-knob-color: #f0d27a;
+  --door-passage: linear-gradient(#fff6dc, #f0dcaa); /* 문 너머 옆 방 */
+  --door-sign-background: #b8892f;
+  --door-sign-color: #2a1a0a;
+}
