@@ -1,5 +1,68 @@
-/* GalleryPage.css: 갤러리 입장 페이지(임시 화면)의 스타일 */
+/* GalleryPage.css: 갤러리 페이지 스타일 - 박물관 선택 화면 + 전시관 */
 
-.gallery-page {
+:root {
+  --gallery-top-height: 56px; /* 전시관 위쪽 제목 줄 높이 (room-gallery 높이 계산에 사용) */
+}
+
+/* ===== 박물관 선택 화면 ===== */
+.gallery-entry {
   padding: 32px;
+}
+
+.gallery-entry-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery-entry-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gallery-entry-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* ===== 전시관 ===== */
+.gallery-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--gallery-top-height);
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.gallery-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.gallery-back {
+  color: inherit;
+}
+
+.gallery-detail-btn {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* ===== 박물관별 디자인 (담당자가 채울 곳) ===== */
+.gallery--national-museum-korea {
+}
+
+.gallery--moma {
+}
+
+.gallery--louvre {
 }

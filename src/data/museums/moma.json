@@ -1,0 +1,121 @@
+{
+  "id": "moma",
+  "name": "뉴욕 현대미술관",
+  "nameEn": "The Museum of Modern Art (MoMA)",
+  "country": "USA",
+  "city": "New York",
+  "description": "",
+  "coverImage": "",
+  "roomStyles": {},
+  "roomSettings": {},
+  "artworks": [
+    {
+      "id": "moma-01",
+      "title": "작품 제목 1",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-02",
+      "title": "작품 제목 2",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-03",
+      "title": "작품 제목 3",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-04",
+      "title": "작품 제목 4",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-05",
+      "title": "작품 제목 5",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-06",
+      "title": "작품 제목 6",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-07",
+      "title": "작품 제목 7",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-08",
+      "title": "작품 제목 8",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    },
+    {
+      "id": "moma-09",
+      "title": "작품 제목 9",
+      "titleEn": "",
+      "artist": "",
+      "year": "",
+      "medium": "",
+      "description": "",
+      "docent": "",
+      "image": "",
+      "credit": ""
+    }
+  ]
+}
