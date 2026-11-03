@@ -1,0 +1,17 @@
+/* MomaHeader.css: MoMA 전시관 헤더 전용 스타일 - 공통 헤더(GalleryHeader.css) 위에 덮어씀 */
+
+/* 헤더 전체 (배경, 글자색, 테두리 등) */
+.gallery-header--moma {
+}
+
+/* 박물관 이름 */
+.gallery-header--moma .gallery-header-name {
+}
+
+/* 영문 이름 */
+.gallery-header--moma .gallery-header-name-en {
+}
+
+/* 현재 방 이름 칩 */
+.gallery-header--moma .gallery-header-room {
+}

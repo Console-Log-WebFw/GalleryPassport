@@ -1,0 +1,76 @@
+/* WallDoor.css: 문 모양 - 바닥에 선 문틀, 살짝 열린 문짝, 문 너머 옆 방의 빛, 위쪽 안내판 */
+
+.wall-door {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  aspect-ratio: 1 / 1.8;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: translateY(5.6%); /* room-gallery 칸은 벽 높이의 90%로 떠 있어서, 문이 바닥에 닿도록 내림 */
+}
+
+/* 문 위 안내판 */
+.wall-door-sign {
+  margin-bottom: 8%;
+  padding: 6px 14px;
+  border-radius: 2px;
+  background: var(--door-sign-background, #222);
+  color: var(--door-sign-color, #fff);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* 문틀 + 문 너머 공간 */
+.wall-door-frame {
+  position: relative;
+  width: 100%;
+  height: 78%;
+  box-sizing: border-box;
+  border: 12px solid var(--door-frame-color, #5a4634);
+  border-bottom: 0;
+  perspective: 700px;
+  background: var(--door-passage, linear-gradient(#fbf3e2, #e9d8b4));
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+/* 문 너머에서 들어오는 빛 */
+.wall-door-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.8), transparent 70%);
+}
+
+/* 문짝: 살짝 열려 있다가 마우스를 올리면 더 열림 */
+.wall-door-leaf {
+  position: absolute;
+  inset: 0;
+  background: var(--door-leaf-color, linear-gradient(90deg, #7b5e45, #674d37));
+  transform-origin: left center;
+  transform: rotateY(-25deg);
+  transition: transform 0.5s ease;
+  box-shadow: 8px 0 16px rgba(0, 0, 0, 0.3);
+}
+
+/* 문 손잡이 */
+.wall-door-leaf::after {
+  content: "";
+  position: absolute;
+  top: 52%;
+  right: 10%;
+  width: 7%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--door-knob-color, #d8b46a);
+}
+
+.wall-door:hover .wall-door-leaf,
+.wall-door:focus-visible .wall-door-leaf {
+  transform: rotateY(-70deg);
+}

@@ -1,5 +1,61 @@
-/* GalleryPage.css: 갤러리 입장 페이지(임시 화면)의 스타일 */
+/* GalleryPage.css: 갤러리 페이지 틀 스타일 - 헤더/방/미니맵 배치 + 방 이동 연출 + 박물관별 디자인 자리 */
 
-.gallery-page {
+:root {
+  --gallery-top-height: 44px; /* 전시관 헤더 높이 (room-gallery 높이 계산에 사용) */
+}
+
+.gallery-missing {
   padding: 32px;
+}
+
+/* 방(room-gallery) 위에 미니맵을 띄우기 위한 기준 */
+.gallery-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== 방 이동 연출: 문 쪽으로 다가가며 어두워졌다가, 새 방에서 밝아짐 ===== */
+.gallery-stage .gallery-room {
+  animation: gallery-enter 0.6s ease-out;
+}
+
+.gallery-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 25; /* 방 위, 미니맵 아래 */
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease; /* GalleryPage.jsx 의 FADE_MS 와 맞춤 */
+}
+
+.gallery-stage.is-leaving::after {
+  opacity: 1;
+}
+
+.gallery-stage.is-leaving .gallery-room {
+  transform: scale(1.12);
+  transition: transform 0.45s ease-in;
+}
+
+@keyframes gallery-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===== 박물관별 전시관 디자인 (헤더는 headers 폴더, 벽·바닥·액자·문은 interiors 폴더) ===== */
+.gallery--national-museum-korea {
+}
+
+.gallery--moma {
+}
+
+.gallery--louvre {
 }

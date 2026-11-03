@@ -14,7 +14,7 @@ const getSize = () =>
   );
 
 /* 지구본 컴포넌트: size 상태로 크기를 정하고, globeRef로 지구본을 직접 잡아 자동 회전을 켬 */
-const GlobeView = () => {
+const GlobeView = ({ onSelect, paused = false }) => {
   const [size, setSize] = useState(getSize()); // 지구본 한 변의 길이 (처음엔 현재 창 크기 기준)
   const globeRef = useRef(); // 지구본 객체를 직접 가리키는 참조
 
@@ -33,6 +33,20 @@ const GlobeView = () => {
     globeRef.current.pointOfView({ altitude: 2.0 }); // 카메라 거리 (기본 2.5, 작을수록 크게 보임)
   }, []);
 
+  /* 박물관 카드가 열려 있으면 자동 회전 멈춤, 닫히면 다시 회전 */
+  useEffect(() => {
+    globeRef.current.controls().autoRotate = !paused;
+  }, [paused]);
+
+  /* 마커 클릭: 그 위치로 지구본을 돌리고 HomePage에 클릭한 박물관을 알려줌 */
+  const handlePointClick = (museum) => {
+    globeRef.current.pointOfView(
+      { lat: museum.lat, lng: museum.lng, altitude: 2.0 },
+      1000,
+    );
+    onSelect?.(museum);
+  };
+
   return (
     <Globe
       ref={globeRef}
@@ -44,6 +58,8 @@ const GlobeView = () => {
       pointColor={() => "#ff4d4d"}
       pointAltitude={0.05}
       pointRadius={0.6}
+      pointLabel="name" // 마우스를 올리면 박물관 이름 표시
+      onPointClick={handlePointClick}
     />
   );
 };

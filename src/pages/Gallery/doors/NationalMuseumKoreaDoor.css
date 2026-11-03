@@ -1,0 +1,69 @@
+/* NationalMuseumKoreaDoor.css: 국립중앙박물관 창호문 모양 */
+
+.nmk-door {
+  aspect-ratio: 1 / 1.75;
+}
+
+/* 문 위 나무 현판 */
+.nmk-door-plaque {
+  margin-bottom: 7%;
+  padding: 6px 18px;
+  border: 2px solid #3a2516;
+  background: linear-gradient(#6b4a31, #573a25);
+  color: #f6ecd8;
+  font-family: "Nanum Myeongjo", "Batang", serif;
+  font-size: 1rem;
+  letter-spacing: 0.25em;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(40, 25, 10, 0.3);
+}
+
+/* 나무 문틀 (문짝이 옆으로 밀려도 틀 밖으로 안 보이게 잘라냄) */
+.nmk-door-frame {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 76%;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 12px solid #4a3322;
+  border-bottom: 0;
+  background: #3a2819;
+}
+
+/* 문 너머 따뜻한 빛 */
+.nmk-door-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 90%, #fff6e0, #ead6ab 70%);
+}
+
+/* 창호 문짝: 한지 + 격자 살 */
+.nmk-door-panel {
+  position: relative;
+  flex: 1;
+  box-sizing: border-box;
+  border: 6px solid #5a3d27;
+  background:
+    repeating-linear-gradient(0deg, #5a3d27 0 3px, transparent 3px 30px),
+    repeating-linear-gradient(90deg, #5a3d27 0 3px, transparent 3px 26px),
+    #f3e8cf; /* 한지 */
+  box-shadow: inset 0 0 18px rgba(120, 80, 30, 0.25);
+  transition: transform 0.6s ease;
+}
+
+/* 마우스를 올리면 미닫이처럼 양옆으로 밀림 */
+.wall-door.nmk-door:hover .nmk-door-panel--left {
+  transform: translateX(-70%);
+}
+
+.wall-door.nmk-door:hover .nmk-door-panel--right {
+  transform: translateX(70%);
+}
+
+/* 문지방 */
+.nmk-door-sill {
+  width: 108%;
+  height: 10px;
+  background: #3a2516;
+}

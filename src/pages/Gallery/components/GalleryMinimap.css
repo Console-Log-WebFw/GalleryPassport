@@ -1,0 +1,154 @@
+/* GalleryMinimap.css: 미니맵 스타일 - 전시관 오른쪽 위에 떠 있는 어두운 유리 패널 + 얇은 선 평면도 */
+
+.gallery-minimap {
+  --minimap-accent: #e2bf74; /* 현재 방·위치 강조색 */
+
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 30; /* 방, 이동 연출 위 */
+  padding: 10px 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(22, 22, 26, 0.72);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  color: #f2f2f2;
+  font-family: inherit;
+}
+
+.gallery-minimap.is-closed {
+  padding-bottom: 10px;
+}
+
+/* ----- 위쪽 줄: 제목 / 나침반 / 접기 ----- */
+.gallery-minimap-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gallery-minimap-title {
+  flex: 1;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gallery-minimap-compass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--minimap-accent);
+}
+
+.gallery-minimap-toggle {
+  display: inline-flex;
+  padding: 2px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.gallery-minimap-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.gallery-minimap-toggle svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ----- 평면도 ----- */
+.gallery-minimap-plan {
+  display: block;
+  margin-top: 8px;
+  overflow: visible;
+}
+
+/* 방 */
+.gallery-minimap-room {
+  cursor: pointer;
+  outline: none;
+}
+
+.gallery-minimap-room rect {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1.2;
+  transition: fill 0.25s ease, stroke 0.25s ease;
+}
+
+.gallery-minimap-room text {
+  fill: rgba(255, 255, 255, 0.65);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.gallery-minimap-room:hover rect,
+.gallery-minimap-room:focus-visible rect {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: rgba(255, 255, 255, 0.8);
+}
+
+/* 지금 있는 방 */
+.gallery-minimap-room.is-current {
+  cursor: default;
+}
+
+.gallery-minimap-room.is-current rect {
+  fill: rgba(226, 191, 116, 0.16);
+  stroke: var(--minimap-accent);
+}
+
+.gallery-minimap-room.is-current text {
+  fill: var(--minimap-accent);
+  font-weight: 600;
+}
+
+/* 문 (방 사이 통로) */
+.gallery-minimap-door {
+  fill: rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+}
+
+/* 현재 위치 점 + 바라보는 방향 부채꼴 */
+.gallery-minimap-me {
+  fill: var(--minimap-accent);
+  stroke: rgba(22, 22, 26, 0.9);
+  stroke-width: 1.5;
+}
+
+.gallery-minimap-view {
+  transition: transform 0.6s ease;
+}
+
+.gallery-minimap-view path {
+  fill: rgba(226, 191, 116, 0.35);
+}
+
+/* 좁은 화면: 조금 작게 */
+@media (max-width: 600px) {
+  .gallery-minimap {
+    top: 10px;
+    right: 10px;
+    padding: 8px 10px 10px;
+    transform: scale(0.85);
+    transform-origin: top right;
+  }
+}

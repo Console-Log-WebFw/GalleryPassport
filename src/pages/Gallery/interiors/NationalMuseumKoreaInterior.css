@@ -1,0 +1,27 @@
+/* NationalMuseumKoreaInterior.css: 국립중앙박물관 전시관 인테리어 - 한지 느낌 벽, 짙은 원목 바닥, 얇은 나무 액자 */
+
+.gallery--national-museum-korea {
+  /* ----- 방 (room-gallery) ----- */
+  --room-light-wall-background: linear-gradient(180deg, #f3ebdd 0%, #e8ddc9 100%); /* 벽 */
+  --room-light-body-background: #ece2d0; /* 벽 뒤 배경 - 벽과 비슷한 색으로 (틈이 생겨도 티 안 나게) */
+  --room-light-ceil-background: #f6f0e4; /* 천장 */
+  --room-light-floor-background: repeating-linear-gradient(90deg, #4a3322 0 70px, #3c2819 70px 72px, #553b27 72px 142px, #3c2819 142px 144px); /* 바닥 */
+  --room-light-wall-shadow: 0 0 60px rgba(60, 40, 20, 0.12), 0 0 120px rgba(60, 40, 20, 0.18) inset;
+  --room-light-text-color: #3b2f25; /* 작품 제목 글자 */
+
+  /* ----- 액자 ----- */
+  --frame-color: #5b4330; /* 테두리 색 */
+  --frame-border-image: none; /* 테두리를 그라데이션으로 할 때 (예: 금색) */
+  --frame-width: 10px; /* 테두리 두께 */
+  --frame-mat-color: #f8f3ea; /* 그림과 테두리 사이 여백 색 */
+  --frame-mat-size: 18px; /* 여백 두께 */
+  --frame-shadow: 0 14px 28px rgba(40, 25, 10, 0.3);
+
+  /* ----- 문 ----- */
+  --door-frame-color: #4a3322;
+  --door-leaf-color: linear-gradient(90deg, #6b4a31, #5a3d27);
+  --door-knob-color: #c9a560;
+  --door-passage: linear-gradient(#fbf4e6, #ead9b8); /* 문 너머 옆 방 */
+  --door-sign-background: #3b2f25;
+  --door-sign-color: #f6efe2;
+}
