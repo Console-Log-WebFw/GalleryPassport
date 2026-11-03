@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# pre-push: 푸시하기 직전에 origin/main 이후의 내 커밋에 Claude 흔적이 있는지 검사한다.
+# 켜는 방법(한 번만): git config core.hooksPath .githooks
+if git rev-parse --verify -q origin/main >/dev/null; then
+  bash .github/scripts/check-commit-author.sh "origin/main..HEAD" || { echo "푸시를 중단했습니다."; exit 1; }
+fi
