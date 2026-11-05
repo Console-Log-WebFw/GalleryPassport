@@ -1,0 +1,5 @@
+[
+  { "id": "louvre", "name": "루브르 박물관", "nameEn": "LOUVRE MUSEUM", "country": "프랑스", "countryEn": "FRANCE", "city": "파리", "flag": "🇫🇷", "color": "blue" },
+  { "id": "moma", "name": "MoMA 박물관", "nameEn": "MoMA", "country": "미국", "countryEn": "USA", "city": "뉴욕", "flag": "🇺🇸", "color": "red" },
+  { "id": "nmk", "name": "국립중앙박물관", "nameEn": "NATIONAL MUSEUM OF KOREA", "country": "한국", "countryEn": "SOUTH KOREA", "city": "서울", "flag": "🇰🇷", "color": "green" }
+]

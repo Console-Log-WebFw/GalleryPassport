@@ -4,6 +4,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { PassportProvider } from "./context/PassportContext";
 import "./styles/global.css";
 
 /* root 칸에 앱을 그리는 시작 파일 */
@@ -13,7 +14,10 @@ root.render(
   <React.StrictMode>
     {/* BrowserRouter: 주소에 따라 화면을 바꿀 수 있게 해줌 */}
     <BrowserRouter>
-      <App />
+      {/* PassportProvider: 어느 페이지에서나 여권 상태를 꺼내 쓸 수 있게 감쌈 */}
+      <PassportProvider>
+        <App />
+      </PassportProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

@@ -1,0 +1,36 @@
+/* StampCard.css: 스탬프 카드 스타일 - 박물관마다 파랑/빨강/초록 */
+
+.stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 130px;
+  padding: 12px 8px;
+  border: 3px solid currentColor;
+  border-radius: 18px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.stamp-blue { color: #3d5fb5; }
+.stamp-red { color: #d5535b; }
+.stamp-green { color: #3f9a64; }
+
+/* 도장처럼 살짝 기울여 찍힌 느낌 */
+.stamp.is-visited:nth-child(odd) { transform: rotate(-3deg); }
+.stamp.is-visited:nth-child(even) { transform: rotate(2deg); }
+
+.stamp-flag { font-size: 28px; }
+.stamp-name { font-size: 13px; letter-spacing: 0.5px; }
+.stamp-country { font-size: 11px; }
+.stamp-date { font-size: 11px; opacity: 0.8; }
+
+/* 아직 방문하지 않은 칸 */
+.stamp.is-empty {
+  color: #b9b1ac;
+  border-style: dashed;
+  background: transparent;
+}
+.stamp-lock { font-size: 28px; font-weight: 700; }
