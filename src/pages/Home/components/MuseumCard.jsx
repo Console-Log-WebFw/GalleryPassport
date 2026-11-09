@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { getMuseum } from "../../../data/museums";
 import "./MuseumCard.css";
 
-/* museumId: homeMuseums.js 의 id (갤러리 JSON 의 id 와 같아야 연결됨) */
+/* museumId: homeMarkers.js 의 id (갤러리 JSON 의 id 와 같아야 연결됨) */
 const MuseumCard = ({ museumId, onClose }) => {
   const museum = getMuseum(museumId);
   if (!museum) return null;
