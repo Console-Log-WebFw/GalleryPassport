@@ -1,5 +1,210 @@
-/* PassportPage.css: 내 여권 페이지(임시 화면)의 스타일 */
+/* PassportPage.css: 내 여권 화면 스타일 - 펼친 여권(왼쪽 정보 면 + 오른쪽 스탬프 면) */
 
 .passport-page {
-  padding: 32px;
+  min-height: calc(100vh - var(--header-height, 0px));
+  padding: 40px 20px;
+  background: linear-gradient(180deg, #e8f1fa 0%, #f6efe4 100%);
+}
+
+/* 펼친 여권 전체 */
+.passport-book {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #f9f5e8;
+  border: 6px solid #7a8aa8;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(40, 50, 80, 0.2);
+}
+
+.passport-left,
+.passport-right {
+  padding: 28px 32px;
+}
+.passport-left {
+  border-right: 1px solid #e0d8c4; /* 가운데 접힌 선 */
+}
+
+.passport-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0d8c4;
+}
+.passport-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f4d3a;
+}
+
+.passport-title-icon {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+/* 사진 + 이름 + 여권 번호 */
+.passport-profile {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 20px 0;
+}
+.passport-photo {
+  width: 110px;
+  height: 140px;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid #d8cfba;
+  flex-shrink: 0;
+}
+.passport-photo-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #b9b1ac;
+}
+.passport-name {
+  margin: 0 0 6px;
+  font-size: 26px;
+  color: #1c1c1c;
+  word-break: break-all;
+}
+.passport-number-label {
+  font-size: 10px;
+  color: #8a837c;
+  letter-spacing: 1px;
+}
+.passport-number {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.passport-desc {
+  margin: 0;
+  text-align: right;
+  font-size: 9px;
+  color: #6b655e;
+  line-height: 1.5;
+}
+
+/* 방문한 갤러리 수 + 레벨 */
+.passport-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 0;
+  border-top: 1px solid #e0d8c4;
+  border-bottom: 1px solid #e0d8c4;
+}
+.passport-label {
+  font-size: 13px;
+  color: #6b655e;
+}
+.passport-count {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.passport-count span {
+  font-size: 16px;
+  font-weight: 400;
+  color: #8a837c;
+}
+.passport-level-box {
+  flex: 1;
+  max-width: 220px;
+}
+.passport-level {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.passport-bar {
+  height: 6px;
+  background: #dcd6c8;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.passport-bar-fill {
+  height: 100%;
+  background: #6a86b8;
+  transition: width 0.4s;
+}
+
+/* My Journey 목록 */
+.passport-journey {
+  padding-top: 16px;
+}
+.passport-journey ul {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+.passport-journey li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #efeadb;
+  border-radius: 8px;
+}
+.passport-journey-flag {
+  font-size: 22px;
+}
+.passport-journey li strong {
+  display: block;
+  font-size: 14px;
+}
+.passport-journey li small {
+  font-size: 11px;
+  color: #6b655e;
+}
+.passport-empty {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #8a837c;
+}
+
+/* 오른쪽 면: 스탬프 */
+.passport-stamps-head {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0d8c4;
+  font-weight: 700;
+  color: #4a5a78;
+}
+.passport-stamps {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding-top: 24px;
+}
+
+/* 좁은 화면: 두 면을 위아래로 쌓기 */
+@media (max-width: 800px) {
+  .passport-book {
+    grid-template-columns: 1fr;
+  }
+  .passport-left {
+    border-right: 0;
+    border-bottom: 1px solid #e0d8c4;
+  }
+  .passport-left,
+  .passport-right {
+    padding: 20px;
+  }
+  .passport-summary {
+    flex-direction: column;
+  }
 }
