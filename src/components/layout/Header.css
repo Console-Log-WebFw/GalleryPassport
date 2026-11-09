@@ -1,7 +1,7 @@
 /* Header.css: 공통 헤더 스타일 - 높이는 --header-height 하나로 관리 */
 
 :root {
-  --header-height: 80px;
+  --header-height: 64px;
 }
 
 .header {

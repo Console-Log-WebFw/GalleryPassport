@@ -1,4 +1,4 @@
-/* HomePage.css: 홈 페이지(HomePage.jsx)의 스타일 - 화면 틀과 배경 이미지 */
+/* HomePage.css: 홈 페이지(HomePage.jsx)의 스타일 - 화면 틀, 배경 이미지, 왼쪽 소개 문구 */
 
 /* 홈 화면 전체 틀: 화면 높이를 가득 채우는 영역 */
 .home {
@@ -19,4 +19,47 @@
   background-size: cover;      /* 화면을 빈틈없이 채우기 */
   background-position: center; /* 이미지 가운데 기준으로 맞추기 */
   background-repeat: no-repeat;
+}
+
+/* 왼쪽 소개 문구: 화면 왼쪽에 세로 가운데로 놓기 */
+.home-copy {
+  position: absolute;
+  left: 6vw;
+  top: 35%;
+  transform: translateY(-50%);
+  z-index: 1;                  /* 배경 위에 보이게 */
+  pointer-events: none;        /* 글자 위에서도 지구본을 돌릴 수 있게 */
+  color: #1f4d3a;              /* 헤더 로고와 같은 진한 초록 */
+}
+
+/* 맨 위 작은 영문 문구 */
+.home-copy-eyebrow {
+  margin: 0 0 16px;
+  font-size: 12px;
+  letter-spacing: 0.3em;       /* 글자 사이를 넓게 */
+  color: #555;
+}
+
+/* 큰 제목 */
+.home-copy-title {
+  margin: 0 0 20px;
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: clamp(40px, 5vw, 72px); /* 화면 폭에 맞춰 40~72px */
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* 아래 설명 문구 */
+.home-copy-desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* 좁은 화면에서는 지구본과 겹치므로 숨기기 */
+@media (max-width: 900px) {
+  .home-copy {
+    display: none;
+  }
 }
