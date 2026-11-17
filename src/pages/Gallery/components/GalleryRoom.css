@@ -35,6 +35,106 @@
   transform: scale(1.02);
 }
 
+/* 확대/축소(돋보기) 버튼: 위치는 GalleryRoom.jsx 가 --room-button-zoom-position 으로 정면 그림 바로 위에 맞춤
+   (벽을 옮기거나 축소한 뒤 새 위치로 부드럽게 이동) */
+.gallery-room .room-gallery .room-zoom-btn,
+.gallery-room .room-gallery .room-exit-btn {
+  transition:
+    top 0.4s ease,
+    opacity 0.5s linear;
+}
+
+/* 확대/축소 중: JS 가 매 프레임 그림 위치로 옮기므로 top 전환 효과는 끔 (그림과 같은 속도로 움직임) */
+.gallery-room.is-zoom-tracking .room-gallery .room-zoom-btn,
+.gallery-room.is-zoom-tracking .room-gallery .room-exit-btn {
+  transition: opacity 0.5s linear;
+}
+
+/* 문·빈 벽을 바라볼 때는 돋보기 숨김 (확대 중이었으면 GalleryRoom.jsx 가 확대도 풂) */
+.gallery-room.zoom-btn-off .room-gallery .room-zoom-btn,
+.gallery-room.zoom-btn-off .room-gallery .room-exit-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 방 회전: GalleryRoom.jsx 가 누적 각도(--arena-deg)로 덮어써서 항상 누른 방향으로 90도씩 돎
+   (transition 은 room-gallery 가 정한 시간을 그대로 사용) */
+.gallery-room .room-gallery .room-arena {
+  transform: rotateY(var(--arena-deg, 0deg)) translateX(var(--arena-x, 0%)) !important;
+}
+
+/* 화살표가 번호 버튼을 대신 눌러 이동하므로 확대 중에도 번호 버튼은 남겨 두고 화면에서만 숨김 */
+.gallery-room .room-gallery.room-zoom .room-paginations {
+  visibility: hidden;
+}
+
+/* ===== 왼쪽/오른쪽 화살표 (room-gallery 화살표 대신, 항상 양쪽 표시) ===== */
+.gallery-room {
+  position: relative;
+}
+
+.gallery-room-arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2; /* 방(room-gallery) 위 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #1c1c1c;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.gallery-room-arrow:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.gallery-room-arrow svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gallery-room-arrow--prev {
+  left: 5%;
+}
+
+.gallery-room-arrow--next {
+  right: 5%;
+}
+
+/* 화면이 낮아 그림 위에 자리가 없을 때: 그림 오른쪽 위 옆으로 */
+.gallery-room.zoom-btn-side .room-gallery .room-zoom-btn,
+.gallery-room.zoom-btn-side .room-gallery .room-exit-btn {
+  left: var(--zoom-btn-left);
+  right: auto;
+  margin: 0;
+}
+
+/* 다른 방에서 들어올 때: 문 쪽으로 돌아서는 동안 숨기고 회전 애니메이션을 꺼서 처음부터 문을 바라보게 */
+.gallery-room.is-snapping {
+  visibility: hidden;
+}
+
+.gallery-room.is-snapping .room-gallery,
+.gallery-room.is-snapping .room-gallery * {
+  transition: none !important;
+}
+
 /* 문/빈 벽 칸은 높이를 꽉 채움 */
 .gallery-room .wall-empty {
   width: 100%;

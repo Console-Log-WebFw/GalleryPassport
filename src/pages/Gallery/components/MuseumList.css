@@ -4,9 +4,14 @@
   padding: 32px;
 }
 
+.museum-list-lead {
+  margin: 8px 0 0;
+  color: #6b6460;
+}
+
 .museum-list-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 24px;
   margin: 24px 0 0;
   padding: 0;
@@ -16,13 +21,57 @@
 .museum-list-card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #e8dfda;
+  border-radius: 12px;
+  background: #fff;
   color: inherit;
   text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.museum-list-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .museum-list-card img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+.museum-list-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+}
+
+.museum-list-name {
+  font-size: 18px;
+}
+
+.museum-list-name-en,
+.museum-list-place {
+  font-size: 13px;
+  color: #6b6460;
+}
+
+/* 소개 글 (자르지 않고 전부 표시) */
+.museum-list-desc {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.museum-list-meta {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f4d3a;
 }

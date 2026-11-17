@@ -36,19 +36,6 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-.gallery-minimap-compass {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--minimap-accent);
-}
-
 .gallery-minimap-toggle {
   display: inline-flex;
   padding: 2px;
