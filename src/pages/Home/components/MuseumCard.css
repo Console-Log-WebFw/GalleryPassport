@@ -1,74 +1,195 @@
-/* MuseumCard.css: 지구본 위 박물관 카드 스타일 */
+/* MuseumCard.css: 지구본 위 박물관 카드 스타일 - 화면 가운데에 뜨는 카드(왼쪽 사진 + 오른쪽 소개), 뒤는 아래에서 위로 갈수록 옅어지는 어두운 배경 */
 
-.museum-card {
-  position: absolute;
-  right: 32px;
-  bottom: 32px;
-  z-index: 10;
-  width: min(320px, calc(100% - 32px));
-  padding: 20px;
+/* 카드를 가운데에 놓는 바깥 영역: 헤더 아래 화면만 덮음 (카드가 헤더를 넘어가지 않게) */
+.museum-card-backdrop {
+  position: fixed;
+  top: var(--header-height, 64px); /* 헤더 높이만큼 내려서 시작 */
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
   box-sizing: border-box;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  color: #222;
+  animation: museum-card-fade 0.25s ease-out;
 }
 
+/* 어두운 배경: 아래는 진한 검정, 위(헤더 쪽)로 갈수록 검정이 점점 사라짐 (흐림 효과 없음) */
+.museum-card-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(20, 28, 24, 0.55) 35%, rgba(20, 28, 24, 0) 100%); /* 아래 35%는 그대로, 위로 갈수록 검정이 빠짐 */
+  pointer-events: none;
+}
+
+/* 카드 본체: 왼쪽 사진 + 오른쪽 글을 가로로 나란히 */
+.museum-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  width: min(760px, 100%);
+  height: min(440px, 100%);    /* 헤더 아래 남은 공간보다 커지지 않음 */
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--card-bg, #fbf8f4); /* 박물관별 카드 배경색 */
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  color: #222;
+  animation: museum-card-pop 0.3s ease-out;
+}
+
+/* 나타날 때: 배경은 서서히, 카드는 아래에서 살짝 올라오며 */
+@keyframes museum-card-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes museum-card-pop {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 닫기 버튼 */
 .museum-card-close {
   position: absolute;
-  top: 8px;
-  right: 12px;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
   border: 0;
-  background: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
   font-size: 22px;
+  line-height: 1;
   cursor: pointer;
 }
+.museum-card-close:hover {
+  background: #fff;
+}
 
-.museum-card-place {
-  margin: 0;
-  font-size: 12px;
-  color: #888;
+/* 왼쪽 사진 영역 */
+.museum-card-photo {
+  position: relative;
+  overflow: hidden;
+  background: #ddd;
+}
+.museum-card-photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* 비율은 유지하고 영역을 가득 채움 */
+  display: block;
+}
+/* 사진 아래쪽을 살짝 어둡게 해서 배지 글씨가 잘 보이게 */
+.museum-card-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 40%);
+  pointer-events: none;
+}
+
+/* 사진 위 위치 배지: 국기 + 도시, 나라 */
+.museum-card-badge {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 600;
+}
+.museum-card-flag {
+  width: 20px;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 오른쪽 글 영역 */
+.museum-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px 24px;
+  overflow-y: auto;            /* 소개가 길면 이 안에서만 스크롤 */
 }
 
 .museum-card-name {
-  margin: 4px 0 0;
-  font-size: 20px;
+  margin: 0;
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--card-accent, #1f4d3a); /* 박물관별 포인트 색 */
 }
 
 .museum-card-name-en {
-  margin: 2px 0 0;
-  font-size: 11px;
-  letter-spacing: 0.15em;
+  margin: 6px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #888;
 }
 
 .museum-card-desc {
-  margin: 12px 0 16px;
-  font-size: 14px;
-  line-height: 1.5;
+  margin: 16px 0 20px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #444;
+  white-space: pre-line;       /* 소개 글의 빈 줄(문단 나눔)을 그대로 보여줌 */
 }
 
+/* 관련 사이트 링크 모음: 방문하기 버튼 바로 위 (여러 개면 줄바꿈) */
+.museum-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;            /* 글 영역 아래쪽으로 밀어 붙임 */
+  margin-bottom: 12px;
+}
+.museum-card-link {
+  padding: 6px 12px;
+  border: 1px solid var(--card-accent, #1f4d3a);
+  border-radius: 999px;
+  color: var(--card-accent, #1f4d3a);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.museum-card-link:hover {
+  background: var(--card-accent, #1f4d3a);
+  color: #fff;
+}
+
+/* 방문하기 버튼 */
 .museum-card-visit {
   display: block;
-  padding: 10px;
-  border-radius: 8px;
-  background: #1f4d3a;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card-accent, #1f4d3a);
   color: #fff;
   text-align: center;
   text-decoration: none;
   font-weight: 600;
+  transition: background 0.2s;
 }
-
 .museum-card-visit:hover {
-  background: #173b2c;
+  background: var(--card-accent-hover, #173b2c);
 }
 
-/* 좁은 화면: 아래쪽 가운데 */
-@media (max-width: 600px) {
+/* 좁은 화면: 사진을 위로, 글을 아래로 쌓기 */
+@media (max-width: 700px) {
   .museum-card {
-    right: 16px;
-    bottom: 16px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 160px 1fr;
+    height: min(560px, 100%);
+  }
+  .museum-card-body {
+    padding: 20px 18px 16px;
   }
 }
