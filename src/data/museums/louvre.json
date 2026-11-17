@@ -4,8 +4,8 @@
   "nameEn": "Musée du Louvre",
   "country": "France",
   "city": "Paris",
-  "description": "",
-  "coverImage": "",
+  "description": "옛 왕궁을 박물관으로 바꾼 세계에서 가장 유명한 미술관 중 하나로, 고대 문명부터 19세기까지의 예술 작품을 소장하고 있습니다. 유리 피라미드 입구는 파리의 상징이 되었습니다.\n\n모나리자, 밀로의 비너스, 사모트라케의 니케처럼 한 번쯤 꼭 보고 싶은 명작들이 모여 있습니다.",
+  "coverImage": "louvre/cover.jpg",
   "roomStyles": {},
   "roomSettings": {},
   "rooms": [

@@ -4,6 +4,25 @@
   --gallery-top-height: 44px; /* 전시관 헤더 높이 (room-gallery 높이 계산에 사용) */
 }
 
+/* ===== 전시관 몰입 모드 (GalleryPage.jsx 에서 <html> 에 클래스를 붙임) =====
+ * 공통 헤더를 화면 위에 겹쳐 띄우고(방이 밀리지 않게), header-hidden 이면 위로 올림
+ * --header-height 를 0 으로 바꿔 방(room-gallery) 높이가 화면을 꽉 채우게 함 - 헤더 자체 높이는 64px 유지 */
+html.gallery-immersive {
+  --header-height: 0px;
+}
+
+html.gallery-immersive .header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 64px;
+  transition: transform 0.35s ease;
+}
+
+html.gallery-immersive.header-hidden .header {
+  transform: translateY(-100%);
+}
+
 .gallery-missing {
   padding: 32px;
 }

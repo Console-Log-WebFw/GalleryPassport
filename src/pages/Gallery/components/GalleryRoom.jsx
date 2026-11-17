@@ -27,10 +27,10 @@ const DEFAULT_ROOM_SETTINGS = {
 };
 
 /*
- * facing: 처음 바라볼 벽 방향 (문으로 들어왔을 때 진행 방향, 없으면 정면)
+ * facing: 문으로 들어왔을 때 진행 방향 / fromRoomId: 이전 방 id (이 방으로 들어온 문을 바라보며 시작, 없으면 facing → 정면)
  * onDoor(room, dir): 문 클릭 / onFacingChange(dir): 바라보는 벽 방향이 바뀔 때 (미니맵 표시용)
  */
-const GalleryRoom = ({ museum, room, facing, onDoor, onFacingChange }) => {
+const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange }) => {
   const roomRef = useRef(null); // room-gallery 조작용 (getCurrentItem 등)
   const wrapRef = useRef(null);
   const [modalIndex, setModalIndex] = useState(null); // 모달에 보여줄 작품 번호 (null = 닫힘)
@@ -112,9 +112,13 @@ const GalleryRoom = ({ museum, room, facing, onDoor, onFacingChange }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   });
 
-  /* 문으로 들어왔으면 진행 방향 벽을 바라보도록 돌아섬 - 특정 벽으로 가는 함수가 없어 번호 버튼을 대신 누름 */
+  /* 다른 방에서 왔으면 들어온 문(이전 방으로 가는 문)을 바라보도록 돌아섬, 그런 문이 없으면 진행 방향 벽
+     - 특정 벽으로 가는 함수가 없어 번호 버튼을 대신 누름 */
   useEffect(() => {
-    const index = facing ? walls.findIndex((wall) => wall.dir === facing) : -1;
+    let index = fromRoomId
+      ? walls.findIndex((wall) => wall.type === "door" && wall.door.id === fromRoomId)
+      : -1;
+    if (index < 0 && facing) index = walls.findIndex((wall) => wall.dir === facing);
     const timer = setTimeout(() => {
       if (index > 0) {
         wrapRef.current

@@ -4,8 +4,8 @@
   "nameEn": "The Museum of Modern Art (MoMA)",
   "country": "USA",
   "city": "New York",
-  "description": "",
-  "coverImage": "",
+  "description": "1929년 문을 연 세계적인 현대미술관으로, 근현대 미술의 흐름을 한눈에 볼 수 있는 곳입니다. 회화·조각부터 사진, 디자인, 영화까지 폭넓은 작품을 소장하고 있습니다.\n\n반 고흐, 피카소, 달리, 워홀 등 교과서에서 만나던 작가들의 대표작을 직접 마주할 수 있습니다.",
+  "coverImage": "moma/cover.jpg",
   "roomStyles": {},
   "roomSettings": {},
   "rooms": [
