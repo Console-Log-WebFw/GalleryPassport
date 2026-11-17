@@ -57,9 +57,6 @@ const GalleryMinimap = ({ rooms, currentRoomId, facing = "n", onSelect }) => {
     <nav className={"gallery-minimap" + (open ? "" : " is-closed")} aria-label="전시실 미니맵">
       <div className="gallery-minimap-head">
         <span className="gallery-minimap-title">FLOOR MAP</span>
-        <span className="gallery-minimap-compass" aria-label="위쪽이 북쪽">
-          N
-        </span>
         <button
           type="button"
           className="gallery-minimap-toggle"

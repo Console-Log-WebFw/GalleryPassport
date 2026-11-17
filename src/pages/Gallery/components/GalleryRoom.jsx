@@ -13,11 +13,18 @@ import "./GalleryRoom.css";
 const ROOM_HEIGHT =
   "calc(100dvh - var(--header-height) - var(--gallery-top-height))";
 
+/* 방 배율: 평소 / 확대 - 확대해도 그림 위에 돋보기 버튼 자리가 남도록 확대 배율을 기본(1.5)보다 낮춤 */
+const ROOM_SCALE = 1.1;
+const ROOM_SCALE_ZOOM = 1.3;
+const ZOOM_BUTTON_GAP = 12; // 돋보기 버튼과 그림 위쪽 사이 간격(px)
+
 const DEFAULT_ROOM_STYLES = {
   width: "100vw", // room-gallery는 % 단위를 못 씀
   height: ROOM_HEIGHT,
   mobileWidth: "100vw",
   mobileHeight: ROOM_HEIGHT,
+  scale: String(ROOM_SCALE),
+  scaleZoom: String(ROOM_SCALE_ZOOM),
 };
 
 const DEFAULT_ROOM_SETTINGS = {
@@ -40,6 +47,73 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
 
   /* 벽 목록 (작품 / 문 / 빈 벽) - 문 방향은 미니맵 배치(map)로 계산 */
   const walls = useMemo(() => buildWalls(museum.rooms, room), [museum, room]);
+
+  /* 처음 바라볼 벽: 다른 방에서 왔으면 들어온 문(이전 방으로 가는 문), 그런 문이 없으면 진행 방향 벽, 아니면 정면(0)
+     - 방이 바뀌면 key로 새로 만들어지므로 처음 한 번만 계산 */
+  const [startIndex] = useState(() => {
+    let index = fromRoomId
+      ? walls.findIndex((wall) => wall.type === "door" && wall.door.id === fromRoomId)
+      : -1;
+    if (index < 0 && facing) index = walls.findIndex((wall) => wall.dir === facing);
+    return Math.max(index, 0);
+  });
+
+  /* 처음 벽으로 돌아서는 동안 방을 숨기고 회전 애니메이션을 끔 → 처음부터 그 벽을 바라보는 것처럼 보임 */
+  const [snapping, setSnapping] = useState(startIndex > 0);
+
+  /*
+   * 돋보기 버튼(확대 .room-zoom-btn / 축소 .room-exit-btn)을 정면 그림 바로 위에 둠 - 기본은 그림 위에 겹쳐 뜸
+   * 두 버튼 모두 --room-button-zoom-position 을 top 으로 쓰므로 이 변수를 .gallery-room 에 지정
+   * 확대 시 커지는 건 방(.room-wrapper)뿐이라 "방 가운데 ~ 그림 위쪽 거리 × 배율"로 확대 후 위치를 미리 계산
+   * - 확대: 시작하자마자 확대 후 위치로 (그림이 커지는 동안에도 안 가림)
+   * - 축소: 그림이 다 작아진 뒤(transitionend)에 내려옴
+   */
+  const zoomOffsetRef = useRef(null); // 배율 1일 때 방 가운데 ~ 그림 위쪽 거리(px)
+  const isZoomed = () => Boolean(wrapRef.current?.querySelector(".room-gallery.room-zoom"));
+
+  const placeZoomButton = (zoomed = isZoomed(), measure = true) => {
+    const wrap = wrapRef.current;
+    const btn = wrap?.querySelector(".room-zoom-btn, .room-exit-btn");
+    const body = wrap?.querySelector(".room-body");
+    const wrapper = wrap?.querySelector(".room-wrapper");
+    if (!btn || !body || !wrapper) return;
+
+    const rect = wrapper.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2; // 확대해도 움직이지 않는 기준점
+    const centerY = rect.top + rect.height / 2;
+
+    /* 멈춰 있을 때만 지금 그림 위치를 다시 잼 (확대/축소가 시작될 때는 전에 잰 값 사용) */
+    if (measure) {
+      const target = wrap.querySelector(
+        ".room-wall.wall-active .item-image img, .room-wall.wall-active .wall-door",
+      );
+      if (!target) return;
+      const now = isZoomed() ? ROOM_SCALE_ZOOM : ROOM_SCALE;
+      const t = target.getBoundingClientRect();
+      zoomOffsetRef.current = { top: (centerY - t.top) / now, right: (t.right - centerX) / now };
+    }
+    const offset = zoomOffsetRef.current;
+    if (!offset) return;
+
+    /* 그 배율일 때 그림 위쪽·오른쪽 (.room-body 기준 좌표) */
+    const scale = zoomed ? ROOM_SCALE_ZOOM : ROOM_SCALE;
+    const b = body.getBoundingClientRect();
+    const imageTop = centerY - offset.top * scale - b.top;
+    const imageRight = centerX + offset.right * scale - b.left;
+
+    const top = imageTop - btn.offsetHeight - ZOOM_BUTTON_GAP;
+    const side = top < 8; // 화면이 낮아 그림 위에 자리가 없으면 그림 오른쪽 위 옆에 붙임
+    wrap.classList.toggle("zoom-btn-side", side);
+    wrap.style.setProperty(
+      "--room-button-zoom-position",
+      `${side ? Math.max(8, imageTop) : top}px`,
+    );
+    wrap.style.setProperty("--zoom-btn-left", `${imageRight + ZOOM_BUTTON_GAP}px`);
+  };
+
+  /* room-gallery 설정의 이벤트는 처음 값으로 고정되므로 ref 로 최신 함수를 부름 */
+  const placeZoomRef = useRef(placeZoomButton);
+  placeZoomRef.current = placeZoomButton;
 
   /* useMemo: room-gallery는 items/styles/settings가 바뀌면 방을 새로 만들기 때문에 같은 값을 유지 */
   const items = useMemo(
@@ -65,7 +139,14 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     [museum],
   );
   const settings = useMemo(
-    () => ({ ...DEFAULT_ROOM_SETTINGS, ...museum.roomSettings }),
+    () => ({
+      ...DEFAULT_ROOM_SETTINGS,
+      event: {
+        onZoomIn: () => placeZoomRef.current(true, false),
+        // 축소는 그림이 다 작아진 뒤 handleTransitionEnd 에서 위치를 맞춤
+      },
+      ...museum.roomSettings,
+    }),
     [museum],
   );
 
@@ -112,30 +193,54 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     return () => document.removeEventListener("keydown", handleKeyDown);
   });
 
-  /* 다른 방에서 왔으면 들어온 문(이전 방으로 가는 문)을 바라보도록 돌아섬, 그런 문이 없으면 진행 방향 벽
-     - 특정 벽으로 가는 함수가 없어 번호 버튼을 대신 누름 */
+  /* 처음 벽(startIndex)으로 돌아섬 - 특정 벽으로 가는 함수가 없어 번호 버튼을 대신 누름 (숨긴 채 애니메이션 없이) */
   useEffect(() => {
-    let index = fromRoomId
-      ? walls.findIndex((wall) => wall.type === "door" && wall.door.id === fromRoomId)
-      : -1;
-    if (index < 0 && facing) index = walls.findIndex((wall) => wall.dir === facing);
+    let frame;
     const timer = setTimeout(() => {
-      if (index > 0) {
+      if (startIndex > 0) {
         wrapRef.current
           ?.querySelectorAll(".room-paginations button")
-          [index]?.click();
+          [startIndex]?.click();
       }
       syncFacing();
+      /* 돌아선 화면이 그려진 다음 프레임에 다시 보이게 + 돋보기 위치 맞춤 */
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => {
+          setSnapping(false);
+          placeZoomRef.current();
+        });
+      });
     }, 100);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(frame);
+    };
   }, []); // 방이 처음 그려질 때 한 번만 (방이 바뀌면 key로 새로 만들어짐)
+
+  /* 벽 이동·확대가 끝났을 때, 창 크기가 바뀔 때 돋보기 위치를 다시 맞춤 */
+  const handleTransitionEnd = (e) => {
+    if (e.propertyName === "transform" && e.target.classList?.contains("room-wrapper")) {
+      placeZoomRef.current();
+    }
+  };
+  useEffect(() => {
+    const handleResize = () => placeZoomRef.current();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   /* 이전/다음: 이 방 안의 작품끼리 처음과 끝이 이어지도록 */
   const moveModal = (step) =>
     setModalIndex((i) => (i + step + artworks.length) % artworks.length);
 
   return (
-    <div ref={wrapRef} className="gallery-room" onClick={handleClick}>
+    <div
+      ref={wrapRef}
+      className={"gallery-room" + (snapping ? " is-snapping" : "")}
+      onClick={handleClick}
+      onTransitionEnd={handleTransitionEnd}
+      onAnimationEnd={() => placeZoomRef.current()} // 방 등장 효과(살짝 커지며 나타남)가 끝난 뒤 다시 잼
+    >
       <RoomGallery
         ref={roomRef}
         items={items}
