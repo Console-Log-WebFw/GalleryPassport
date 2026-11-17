@@ -28,9 +28,20 @@ const DEFAULT_ROOM_STYLES = {
 };
 
 const DEFAULT_ROOM_SETTINGS = {
-  arrowNav: "icon",
+  arrowNav: "disabled", // room-gallery 화살표는 처음·끝 벽에서 한쪽만 나와서 끄고 직접 만든 화살표 사용
+  keypressToNav: false, // 방향키도 직접 처리 (처음·끝이 이어지도록)
   paginations: "number",
+  paginationsOnZoom: "show", // 확대 중에도 화살표가 번호 버튼을 눌러 이동하므로 남겨 두고 CSS로만 숨김
   darkMode: "light",
+};
+
+/* 벽 이동 방향: 1 = 오른쪽(다음), -1 = 왼쪽(이전), 0 = 번호·문 등으로 바로 이동(가까운 쪽으로 회전) */
+const turnDegrees = (fromY, toY, dir) => {
+  const steps = (((toY - fromY) % 4) + 4) % 4; // 오른쪽으로 몇 번 90도 돌아야 하는지 (0~3)
+  if (steps === 0) return 0;
+  if (dir > 0) return steps * 90;
+  if (dir < 0) return -(4 - steps) * 90;
+  return steps === 3 ? -90 : steps * 90;
 };
 
 /*
@@ -164,7 +175,7 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
    */
   const handleClick = (e) => {
     syncFacing();
-    if (e.target.closest(".room-paginations, .room-prev, .room-next")) return; // room-gallery 이동 버튼
+    if (e.target.closest(".room-paginations, .gallery-room-arrow")) return; // 이동 버튼
 
     const wall = getCurrentWall();
     const active = wrapRef.current?.querySelector(".room-wall.wall-active");
@@ -184,10 +195,46 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     }
   };
 
-  /* 방향키로 이동해도 바라보는 방향 갱신 */
+  /*
+   * 회전을 자연스럽게: room-gallery 는 벽 방향(y: 0 정면, 1 오른쪽, 2 뒤, 3 왼쪽)마다 고정 각도(y × 90도)로 돌려서
+   * 왼쪽 벽 → 정면처럼 끝과 처음을 오갈 때 반대쪽으로 크게 돎
+   * → 지금까지 돈 각도를 누적해서, 누른 방향(또는 가까운 쪽)으로 90도씩만 돌도록 .room-arena 회전을 덮어씀 (CSS !important)
+   */
+  const turnDirRef = useRef(0); // 다음 이동의 방향 (화살표·방향키가 정함)
+  const arenaRef = useRef({ y: 0, deg: 0 }); // 지금 바라보는 벽 방향, 누적 회전 각도
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const observer = new MutationObserver((records) => {
+      if (!records.some((r) => r.target.classList?.contains("room-arena"))) return;
+      const pos = roomRef.current?.getCurrentItem()?.position;
+      if (!pos) return;
+      const arena = arenaRef.current;
+      arena.deg += turnDegrees(arena.y, pos.y, turnDirRef.current);
+      arena.y = pos.y;
+      turnDirRef.current = 0;
+      wrap.style.setProperty("--arena-deg", `${arena.deg}deg`);
+      wrap.style.setProperty("--arena-x", `${(pos.x ?? 0) * -100}%`);
+    });
+    observer.observe(wrap, { subtree: true, attributes: true, attributeFilter: ["style"] });
+    return () => observer.disconnect();
+  }, []);
+
+  /* 화살표·방향키: 옆 벽으로 (처음과 끝이 이어짐) - 특정 벽으로 가는 함수가 없어 번호 버튼을 대신 누름 */
+  const turn = (dir) => {
+    const current = roomRef.current?.getCurrentItem()?.index ?? 0;
+    const next = (current + dir + walls.length) % walls.length;
+    turnDirRef.current = dir;
+    wrapRef.current?.querySelectorAll(".room-paginations button")[next]?.click();
+  };
+
+  /* 방향키 ←/→ 로 이동 (작품 모달이 열려 있으면 무시) */
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") syncFacing();
+      if (modalIndex !== null) return;
+      if (e.key === "ArrowLeft") turn(-1);
+      else if (e.key === "ArrowRight") turn(1);
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
@@ -217,16 +264,20 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     };
   }, []); // 방이 처음 그려질 때 한 번만 (방이 바뀌면 key로 새로 만들어짐)
 
-  /* 벽 이동·확대가 끝났을 때, 창 크기가 바뀔 때 돋보기 위치를 다시 맞춤 */
+  /* 벽 이동·확대가 끝났을 때, 방 크기가 바뀔 때(창 크기, 헤더가 올라갈 때) 돋보기 위치를 다시 맞춤 */
   const handleTransitionEnd = (e) => {
-    if (e.propertyName === "transform" && e.target.classList?.contains("room-wrapper")) {
+    const { classList } = e.target;
+    if (
+      e.propertyName === "transform" &&
+      (classList?.contains("room-wrapper") || classList?.contains("room-arena"))
+    ) {
       placeZoomRef.current();
     }
   };
   useEffect(() => {
-    const handleResize = () => placeZoomRef.current();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const observer = new ResizeObserver(() => placeZoomRef.current());
+    observer.observe(wrapRef.current);
+    return () => observer.disconnect();
   }, []);
 
   /* 이전/다음: 이 방 안의 작품끼리 처음과 끝이 이어지도록 */
@@ -247,6 +298,28 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
         styles={styles}
         settings={settings}
       />
+
+      {/* 왼쪽/오른쪽 벽으로 돌기 - 어느 벽에서든 양쪽 모두 보임 */}
+      <button
+        type="button"
+        className="gallery-room-arrow gallery-room-arrow--prev"
+        aria-label="왼쪽 벽 보기"
+        onClick={() => turn(-1)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        className="gallery-room-arrow gallery-room-arrow--next"
+        aria-label="오른쪽 벽 보기"
+        onClick={() => turn(1)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
 
       {modalIndex !== null && (
         <Modal
