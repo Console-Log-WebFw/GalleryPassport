@@ -161,10 +161,21 @@ const PassportPage = () => {
               ))}
             </div>
             {/* 장식: 흐린 원형 도장 */}
-            <div className="passport-seal" aria-hidden="true">
-              <img src={iconImg} alt="" />
-              <span>GALLERY PASSPORT</span>
-            </div>
+            <svg className="passport-seal" viewBox="0 0 100 100" aria-hidden="true">
+              <defs>
+                <path id="seal-arc" d="M50 50m-34 0a34 34 0 1 1 68 0a34 34 0 1 1-68 0" />
+              </defs>
+              <circle className="seal-ring" cx="50" cy="50" r="47" />
+              <circle className="seal-ring seal-ring-thin" cx="50" cy="50" r="43" />
+              <circle className="seal-ring seal-ring-thin" cx="50" cy="50" r="28" />
+              {/* 원 둘레를 따라 글자가 돌아감 */}
+              <text className="seal-text">
+                <textPath href="#seal-arc" textLength="206" lengthAdjust="spacing">
+                  GALLERY PASSPORT ★ GALLERY PASSPORT ★
+                </textPath>
+              </text>
+              <image href={iconImg} x="36" y="36" width="28" height="28" opacity="0.55" />
+            </svg>
           </div>
         </div>
       </div>
