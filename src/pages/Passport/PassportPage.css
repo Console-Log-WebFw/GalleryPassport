@@ -285,28 +285,24 @@
   position: absolute;
   right: 28px;
   bottom: 22px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  width: 92px;
-  height: 92px;
-  justify-content: center;
-  border: 2px solid rgba(106, 134, 184, 0.35);
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 4px rgba(106, 134, 184, 0.12);
-  color: rgba(106, 134, 184, 0.55);
-  font-size: 7px;
-  letter-spacing: 1px;
+  width: 104px;
+  height: 104px;
+  color: rgba(106, 134, 184, 0.6);
   transform: rotate(-12deg);
   pointer-events: none;
 }
-.passport-seal img {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  opacity: 0.4;
-  filter: grayscale(1);
+.seal-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+.seal-ring-thin {
+  stroke-width: 0.8;
+}
+.seal-text {
+  fill: currentColor;
+  font-size: 7px;
+  font-weight: 700;
 }
 
 /* 좁은 화면: 두 면을 위아래로 쌓기 */
