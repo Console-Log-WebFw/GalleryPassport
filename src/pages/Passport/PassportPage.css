@@ -1,8 +1,9 @@
 /* PassportPage.css: 내 여권 화면 스타일 - 펼친 여권(왼쪽 정보 면 + 오른쪽 스탬프 면) */
 
 .passport-page {
-  min-height: calc(100vh - var(--header-height, 0px));
-  padding: 40px 20px;
+  margin-top: calc(-1 * var(--header-height, 0px)); /* 투명 헤더 뒤까지 배경이 보이게 위로 끌어올림 */
+  min-height: 100vh;
+  padding: calc(var(--header-height, 0px) + 40px) 20px 40px;
   background: linear-gradient(180deg, #e8f1fa 0%, #f6efe4 100%);
 }
 
