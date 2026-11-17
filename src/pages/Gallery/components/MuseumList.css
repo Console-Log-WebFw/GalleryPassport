@@ -60,15 +60,12 @@
   color: #6b6460;
 }
 
-/* 소개 글은 3줄까지만 */
+/* 소개 글 (자르지 않고 전부 표시) */
 .museum-list-desc {
-  display: -webkit-box;
   margin: 8px 0 0;
-  overflow: hidden;
   font-size: 14px;
   line-height: 1.6;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  word-break: keep-all;
 }
 
 .museum-list-meta {

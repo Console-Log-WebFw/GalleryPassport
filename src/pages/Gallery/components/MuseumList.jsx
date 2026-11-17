@@ -5,8 +5,9 @@ import { MUSEUMS } from "../../../data/museums";
 import { getArtworkImage } from "../../../utils/artworkImage";
 import "./MuseumList.css";
 
-/* 소개 글은 첫 문단만 카드에 보여줌 (빈 줄로 문단 구분) */
-const getSummary = (text) => (text || "").split(/\n\s*\n/)[0].trim();
+/* 소개 글을 문단(빈 줄로 구분) 목록으로 */
+const getParagraphs = (text) =>
+  (text || "").split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 /* 전시 작품 수 (모든 방의 작품 합) */
 const countArtworks = (museum) =>
@@ -29,11 +30,11 @@ const MuseumList = () => (
               <span className="museum-list-place">
                 {museum.city}, {museum.country}
               </span>
-              {museum.description && (
-                <p className="museum-list-desc">
-                  {getSummary(museum.description)}
+              {getParagraphs(museum.description).map((p, i) => (
+                <p key={i} className="museum-list-desc">
+                  {p}
                 </p>
-              )}
+              ))}
               <span className="museum-list-meta">
                 전시실 {museum.rooms.length}개 · 작품 {countArtworks(museum)}점
               </span>

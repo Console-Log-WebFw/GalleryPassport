@@ -69,48 +69,28 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     return Math.max(index, 0);
   });
 
-  /* 처음 벽으로 돌아서는 동안 방을 숨기고 회전 애니메이션을 끔 → 처음부터 그 벽을 바라보는 것처럼 보임 */
-  const [snapping, setSnapping] = useState(startIndex > 0);
+  /* 처음 벽으로 돌아서는 동안 방을 숨기고 회전 애니메이션을 끔(is-snapping) → 처음부터 그 벽을 바라보는 것처럼 보임
+     - .gallery-room 의 다른 클래스(zoom-btn-off 등)는 classList 로 붙이므로, React 가 className 을 다시 쓰지 않게 처음 값으로 고정 */
+  const [roomClassName] = useState("gallery-room" + (startIndex > 0 ? " is-snapping" : ""));
 
   /*
    * 돋보기 버튼(확대 .room-zoom-btn / 축소 .room-exit-btn)을 정면 그림 바로 위에 둠 - 기본은 그림 위에 겹쳐 뜸
    * 두 버튼 모두 --room-button-zoom-position 을 top 으로 쓰므로 이 변수를 .gallery-room 에 지정
-   * 확대 시 커지는 건 방(.room-wrapper)뿐이라 "방 가운데 ~ 그림 위쪽 거리 × 배율"로 확대 후 위치를 미리 계산
-   * - 확대: 시작하자마자 확대 후 위치로 (그림이 커지는 동안에도 안 가림)
-   * - 축소: 그림이 다 작아진 뒤(transitionend)에 내려옴
    */
-  const zoomOffsetRef = useRef(null); // 배율 1일 때 방 가운데 ~ 그림 위쪽 거리(px)
-  const isZoomed = () => Boolean(wrapRef.current?.querySelector(".room-gallery.room-zoom"));
-
-  const placeZoomButton = (zoomed = isZoomed(), measure = true) => {
+  const placeZoomButton = () => {
     const wrap = wrapRef.current;
     const btn = wrap?.querySelector(".room-zoom-btn, .room-exit-btn");
     const body = wrap?.querySelector(".room-body");
-    const wrapper = wrap?.querySelector(".room-wrapper");
-    if (!btn || !body || !wrapper) return;
+    const target = wrap?.querySelector(
+      ".room-wall.wall-active .item-image img, .room-wall.wall-active .wall-door",
+    );
+    if (!btn || !body || !target) return;
 
-    const rect = wrapper.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2; // 확대해도 움직이지 않는 기준점
-    const centerY = rect.top + rect.height / 2;
-
-    /* 멈춰 있을 때만 지금 그림 위치를 다시 잼 (확대/축소가 시작될 때는 전에 잰 값 사용) */
-    if (measure) {
-      const target = wrap.querySelector(
-        ".room-wall.wall-active .item-image img, .room-wall.wall-active .wall-door",
-      );
-      if (!target) return;
-      const now = isZoomed() ? ROOM_SCALE_ZOOM : ROOM_SCALE;
-      const t = target.getBoundingClientRect();
-      zoomOffsetRef.current = { top: (centerY - t.top) / now, right: (t.right - centerX) / now };
-    }
-    const offset = zoomOffsetRef.current;
-    if (!offset) return;
-
-    /* 그 배율일 때 그림 위쪽·오른쪽 (.room-body 기준 좌표) */
-    const scale = zoomed ? ROOM_SCALE_ZOOM : ROOM_SCALE;
+    /* 지금 그림 위쪽·오른쪽 (.room-body 기준 좌표) */
     const b = body.getBoundingClientRect();
-    const imageTop = centerY - offset.top * scale - b.top;
-    const imageRight = centerX + offset.right * scale - b.left;
+    const t = target.getBoundingClientRect();
+    const imageTop = t.top - b.top;
+    const imageRight = t.right - b.left;
 
     const top = imageTop - btn.offsetHeight - ZOOM_BUTTON_GAP;
     const side = top < 8; // 화면이 낮아 그림 위에 자리가 없으면 그림 오른쪽 위 옆에 붙임
@@ -122,9 +102,49 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     wrap.style.setProperty("--zoom-btn-left", `${imageRight + ZOOM_BUTTON_GAP}px`);
   };
 
-  /* room-gallery 설정의 이벤트는 처음 값으로 고정되므로 ref 로 최신 함수를 부름 */
+  /* 이벤트·관찰자 안에서는 ref 로 최신 함수를 부름 */
   const placeZoomRef = useRef(placeZoomButton);
   placeZoomRef.current = placeZoomButton;
+
+  /*
+   * 확대/축소하는 동안(약 2초) 매 프레임 그림 위치를 재서 버튼이 그림과 같이 부드럽게 움직이게 함
+   * - 확대 ↔ 축소 버튼이 서로 바뀌어 그려져도 위치는 계속 이어짐
+   * - 방이 다 커지거나 작아지면(transitionend) 멈춤, 혹시 몰라 최대 3초
+   */
+  const zoomTrackRef = useRef({ frame: 0, until: 0 });
+  const stopZoomTracking = () => {
+    cancelAnimationFrame(zoomTrackRef.current.frame);
+    zoomTrackRef.current.until = 0;
+    wrapRef.current?.classList.remove("is-zoom-tracking");
+    placeZoomRef.current();
+  };
+  const startZoomTracking = () => {
+    const track = zoomTrackRef.current;
+    cancelAnimationFrame(track.frame);
+    track.until = performance.now() + 3000;
+    wrapRef.current?.classList.add("is-zoom-tracking");
+    const step = () => {
+      placeZoomRef.current();
+      if (performance.now() < track.until) track.frame = requestAnimationFrame(step);
+      else stopZoomTracking();
+    };
+    step();
+  };
+  useEffect(() => () => cancelAnimationFrame(zoomTrackRef.current.frame), []);
+
+  /* 정면 벽이 작품이 아니면(문·빈 벽) 돋보기를 숨기고, 확대 중이었으면 확대를 풂 */
+  const syncZoomButtonVisible = () => {
+    const wall = walls[roomRef.current?.getCurrentItem()?.index ?? 0];
+    const off = wall?.type !== "artwork";
+    wrapRef.current?.classList.toggle("zoom-btn-off", off);
+    if (off && wrapRef.current?.querySelector(".room-gallery.room-zoom")) {
+      roomRef.current?.setZoom(false);
+    }
+  };
+  const startZoomTrackingRef = useRef(startZoomTracking);
+  startZoomTrackingRef.current = startZoomTracking;
+  const syncZoomButtonRef = useRef(syncZoomButtonVisible);
+  syncZoomButtonRef.current = syncZoomButtonVisible;
 
   /* useMemo: room-gallery는 items/styles/settings가 바뀌면 방을 새로 만들기 때문에 같은 값을 유지 */
   const items = useMemo(
@@ -150,14 +170,7 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     [museum],
   );
   const settings = useMemo(
-    () => ({
-      ...DEFAULT_ROOM_SETTINGS,
-      event: {
-        onZoomIn: () => placeZoomRef.current(true, false),
-        // 축소는 그림이 다 작아진 뒤 handleTransitionEnd 에서 위치를 맞춤
-      },
-      ...museum.roomSettings,
-    }),
+    () => ({ ...DEFAULT_ROOM_SETTINGS, ...museum.roomSettings }),
     [museum],
   );
 
@@ -207,7 +220,22 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
     const wrap = wrapRef.current;
     if (!wrap) return;
     const observer = new MutationObserver((records) => {
-      if (!records.some((r) => r.target.classList?.contains("room-arena"))) return;
+      /* 확대/축소 시작 (.room-gallery 에 room-zoom 이 붙거나 떨어짐) → 돋보기가 그림을 따라 움직이게 */
+      if (
+        records.some(
+          (r) => r.attributeName === "class" && r.target.classList?.contains("room-gallery"),
+        )
+      ) {
+        startZoomTrackingRef.current();
+      }
+      if (
+        !records.some(
+          (r) => r.attributeName === "style" && r.target.classList?.contains("room-arena"),
+        )
+      ) {
+        return;
+      }
+      syncZoomButtonRef.current(); // 문 벽이면 확대 버튼 숨김
       const pos = roomRef.current?.getCurrentItem()?.position;
       if (!pos) return;
       const arena = arenaRef.current;
@@ -217,7 +245,11 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
       wrap.style.setProperty("--arena-deg", `${arena.deg}deg`);
       wrap.style.setProperty("--arena-x", `${(pos.x ?? 0) * -100}%`);
     });
-    observer.observe(wrap, { subtree: true, attributes: true, attributeFilter: ["style"] });
+    observer.observe(wrap, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
     return () => observer.disconnect();
   }, []);
 
@@ -253,7 +285,8 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
       /* 돌아선 화면이 그려진 다음 프레임에 다시 보이게 + 돋보기 위치 맞춤 */
       frame = requestAnimationFrame(() => {
         frame = requestAnimationFrame(() => {
-          setSnapping(false);
+          wrapRef.current?.classList.remove("is-snapping");
+          syncZoomButtonRef.current();
           placeZoomRef.current();
         });
       });
@@ -267,10 +300,10 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
   /* 벽 이동·확대가 끝났을 때, 방 크기가 바뀔 때(창 크기, 헤더가 올라갈 때) 돋보기 위치를 다시 맞춤 */
   const handleTransitionEnd = (e) => {
     const { classList } = e.target;
-    if (
-      e.propertyName === "transform" &&
-      (classList?.contains("room-wrapper") || classList?.contains("room-arena"))
-    ) {
+    if (e.propertyName !== "transform") return;
+    if (classList?.contains("room-wrapper") && zoomTrackRef.current.until) {
+      stopZoomTracking(); // 확대/축소가 끝남
+    } else if (classList?.contains("room-wrapper") || classList?.contains("room-arena")) {
       placeZoomRef.current();
     }
   };
@@ -287,7 +320,7 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
   return (
     <div
       ref={wrapRef}
-      className={"gallery-room" + (snapping ? " is-snapping" : "")}
+      className={roomClassName}
       onClick={handleClick}
       onTransitionEnd={handleTransitionEnd}
       onAnimationEnd={() => placeZoomRef.current()} // 방 등장 효과(살짝 커지며 나타남)가 끝난 뒤 다시 잼
