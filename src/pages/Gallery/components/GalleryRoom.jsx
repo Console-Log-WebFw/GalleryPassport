@@ -7,6 +7,7 @@ import { getArtworkImage } from "../../../utils/artworkImage";
 import { buildWalls } from "../../../utils/roomLayout";
 import { getGalleryDoor } from "../doors"; // 박물관별 문 (doors 폴더)
 import { getArtworkModal } from "../modals"; // 박물관별 작품 모달 (modals 폴더)
+import { usePassport } from "../../../context/PassportContext"; // 여권에 본 작품 기록
 import "./GalleryRoom.css";
 
 /* room-gallery 기본 설정 - 박물관 JSON의 roomStyles / roomSettings 가 이 값을 덮어씀 (벽·바닥·액자는 interiors 폴더 CSS) */
@@ -53,6 +54,7 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
   const wrapRef = useRef(null);
   const [modalIndex, setModalIndex] = useState(null); // 모달에 보여줄 작품 번호 (null = 닫힘)
   const { artworks } = room;
+  const { viewArtwork } = usePassport(); // 작품을 열 때마다 여권에 기록 (다 보면 도장)
   const Door = getGalleryDoor(museum.id);
   const Modal = getArtworkModal(museum.id);
 
@@ -316,6 +318,12 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
   /* 이전/다음: 이 방 안의 작품끼리 처음과 끝이 이어지도록 */
   const moveModal = (step) =>
     setModalIndex((i) => (i + step + artworks.length) % artworks.length);
+
+  /* 작품 상세 모달이 열리거나 이전/다음으로 바뀔 때, 그 작품을 본 것으로 여권에 기록 */
+  useEffect(() => {
+    const artwork = modalIndex !== null ? artworks[modalIndex] : null;
+    if (artwork) viewArtwork(museum, artwork.id);
+  }, [modalIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div
