@@ -5,7 +5,6 @@ import Layout from "./components/layout/Layout";
 import HomePage from "./pages/Home/HomePage";
 import GalleryPage from "./pages/Gallery/GalleryPage";
 import PassportPage from "./pages/Passport/PassportPage";
-import AboutPage from "./pages/About/AboutPage";
 
 const App = () => (
   <Routes>
@@ -14,7 +13,6 @@ const App = () => (
       <Route path="/gallery" element={<GalleryPage />} />
       <Route path="/gallery/:museumId/:roomId?" element={<GalleryPage />} />
       <Route path="/passport" element={<PassportPage />} />
-      <Route path="/about" element={<AboutPage />} />
     </Route>
   </Routes>
 );
