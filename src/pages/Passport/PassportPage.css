@@ -4,7 +4,7 @@
   margin-top: calc(-1 * var(--header-height, 0px)); /* 투명 헤더 뒤까지 배경이 보이게 위로 끌어올림 */
   min-height: 100vh;
   padding: calc(var(--header-height, 0px) + 24px) 20px 48px;
-  background: linear-gradient(180deg, #e8f1fa 0%, #f6efe4 100%);
+  background: #f6efe4 url("../../assets/images/home/bg_passport.png") center / cover no-repeat; /* 배경 이미지 (이미지가 안 뜰 때를 대비한 바탕색) */
 }
 
 .passport-wrap {

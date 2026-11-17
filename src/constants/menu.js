@@ -5,5 +5,4 @@ export const NAV_ITEMS = [
   { to: "/", label: "Home", end: true },
   { to: "/gallery", label: "Gallery Entry" },
   { to: "/passport", label: "My Passport" },
-  { to: "/about", label: "About" },
 ];
