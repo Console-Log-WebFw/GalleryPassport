@@ -1,5 +1,14 @@
 /* MuseumList.css: 박물관 선택 화면 스타일 */
 
+/* 화면 전체 배경: 여권 화면처럼 투명 헤더 뒤까지 배경 이미지가 보이게 위로 끌어올림 */
+.museum-list-page {
+  margin-top: calc(-1 * var(--header-height, 0px));
+  padding-top: var(--header-height, 0px);
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: #f6f1ea url("../../../assets/images/home/bg_gallery-entry.png") center / cover no-repeat; /* 이미지가 안 뜰 때를 대비한 바탕색 */
+}
+
 .museum-list {
   max-width: 1100px;
   margin: 0 auto;

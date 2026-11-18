@@ -27,53 +27,55 @@ const SUMMARY = [
 ];
 
 const MuseumList = () => (
-  <section className="museum-list">
-    {/* 머리말: 홈 화면 소개 문구와 같은 구성 (작은 한글 → 세리프 영문 제목 → 설명) */}
-    <header className="museum-list-hero">
-      <p className="museum-list-eyebrow">갤러리 입장</p>
-      <h1 className="museum-list-title">Gallery Entry</h1>
-      <div className="museum-list-divider" aria-hidden="true">
-        <span />
-        <img src={iconImg} alt="" />
-        <span />
-      </div>
-      <p className="museum-list-lead">
-        들어가고 싶은 박물관을 골라 전시실을 둘러보세요.
-      </p>
-      <ul className="museum-list-summary">
-        {SUMMARY.map(({ label, value }) => (
-          <li key={label}>
-            <strong>{value}</strong>
-            <span>{label}</span>
+  <div className="museum-list-page">
+    <section className="museum-list">
+      {/* 머리말: 홈 화면 소개 문구와 같은 구성 (작은 한글 → 세리프 영문 제목 → 설명) */}
+      <header className="museum-list-hero">
+        <p className="museum-list-eyebrow">갤러리 입장</p>
+        <h1 className="museum-list-title">Gallery Entry</h1>
+        <div className="museum-list-divider" aria-hidden="true">
+          <span />
+          <img src={iconImg} alt="" />
+          <span />
+        </div>
+        <p className="museum-list-lead">
+          들어가고 싶은 박물관을 골라 전시실을 둘러보세요.
+        </p>
+        <ul className="museum-list-summary">
+          {SUMMARY.map(({ label, value }) => (
+            <li key={label}>
+              <strong>{value}</strong>
+              <span>{label}</span>
+            </li>
+          ))}
+        </ul>
+      </header>
+      <ul className="museum-list-grid">
+        {MUSEUMS.map((museum) => (
+          <li key={museum.id}>
+            <Link to={`/gallery/${museum.id}`} className="museum-list-card">
+              <img src={getCardImage(museum)} alt="" />
+              <div className="museum-list-body">
+                <strong className="museum-list-name">{museum.name}</strong>
+                <span className="museum-list-name-en">{museum.nameEn}</span>
+                <span className="museum-list-place">
+                  {museum.city}, {museum.country}
+                </span>
+                {getParagraphs(museum.description).map((p, i) => (
+                  <p key={i} className="museum-list-desc">
+                    {p}
+                  </p>
+                ))}
+                <span className="museum-list-meta">
+                  전시실 {museum.rooms.length}개 · 작품 {countArtworks(museum)}점
+                </span>
+              </div>
+            </Link>
           </li>
         ))}
       </ul>
-    </header>
-    <ul className="museum-list-grid">
-      {MUSEUMS.map((museum) => (
-        <li key={museum.id}>
-          <Link to={`/gallery/${museum.id}`} className="museum-list-card">
-            <img src={getCardImage(museum)} alt="" />
-            <div className="museum-list-body">
-              <strong className="museum-list-name">{museum.name}</strong>
-              <span className="museum-list-name-en">{museum.nameEn}</span>
-              <span className="museum-list-place">
-                {museum.city}, {museum.country}
-              </span>
-              {getParagraphs(museum.description).map((p, i) => (
-                <p key={i} className="museum-list-desc">
-                  {p}
-                </p>
-              ))}
-              <span className="museum-list-meta">
-                전시실 {museum.rooms.length}개 · 작품 {countArtworks(museum)}점
-              </span>
-            </div>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </section>
+    </section>
+  </div>
 );
 
 export default MuseumList;
