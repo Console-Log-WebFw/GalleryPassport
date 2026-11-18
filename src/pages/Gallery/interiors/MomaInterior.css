@@ -1,21 +1,60 @@
-/* MomaInterior.css: MoMA 전시관 인테리어 - 하얀 벽, 회색 콘크리트 바닥, 얇은 검은 액자(여백 없음) */
+/* MomaInterior.css: MoMA 전시관 인테리어 - 화이트 큐브 벽(트랙 조명 빛 번짐 + 그림자 틈 걸레받이),
+   리니어 조명 레일 천장, 폴리시드 콘크리트 바닥, 얇은 검은 액자(여백 없음), 미술관 캡션식 라벨 */
 
 .gallery--moma {
   /* ----- 방 (room-gallery) ----- */
-  --room-light-wall-background: linear-gradient(180deg, #fafaf8 0%, #f0f0ee 100%); /* 벽 */
-  --room-light-body-background: #f3f3f1; /* 벽 뒤 배경 - 벽과 비슷한 색으로 (틈이 생겨도 티 안 나게) */
-  --room-light-ceil-background: #fbfbfa; /* 천장 */
-  --room-light-floor-background: linear-gradient(180deg, #a5a5a2 0%, #c4c4c0 100%); /* 바닥 */
-  --room-light-wall-shadow: 0 0 50px rgba(0, 0, 0, 0.06), 0 0 100px rgba(0, 0, 0, 0.1) inset;
+  /* 벽: 위쪽 천장 조명이 벽을 쓸어내리는 빛(라이트 워시) + 아래로 갈수록 아주 약하게 어두워짐 + 바닥과 만나는 그림자 틈 */
+  --room-light-wall-background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0, rgba(0, 0, 0, 0.16) 3px, rgba(0, 0, 0, 0.05) 3px, transparent 14px),
+    radial-gradient(ellipse 55% 38% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 70%),
+    radial-gradient(ellipse 30% 22% at 18% 0%, rgba(255, 252, 245, 0.7), transparent 75%),
+    radial-gradient(ellipse 30% 22% at 82% 0%, rgba(255, 252, 245, 0.7), transparent 75%),
+    linear-gradient(180deg, #f8f7f4 0%, #f0efeb 55%, #e6e5e0 100%);
+  --room-light-body-background: #f3f2ef; /* 벽 뒤 배경 - 벽과 비슷한 색으로 (틈이 생겨도 티 안 나게) */
+
+  /* 천장: 흰 천장 + 가는 조명 트랙 격자(어느 벽을 봐도 같은 모양) */
+  --room-light-ceil-background:
+    repeating-linear-gradient(90deg, transparent 0 calc(33.333% - 1px), rgba(0, 0, 0, 0.13) calc(33.333% - 1px) 33.333%),
+    repeating-linear-gradient(0deg, transparent 0 calc(33.333% - 1px), rgba(0, 0, 0, 0.13) calc(33.333% - 1px) 33.333%),
+    radial-gradient(ellipse at 50% 50%, #ffffff 0%, #f2f2f0 100%);
+  --room-light-ceil-shadow: 0 0 120px rgba(0, 0, 0, 0.12) inset;
+
+  /* 바닥: 폴리시드 콘크리트 - 미세 반점 2겹 + 벽 쪽 반사광 + 기본 톤 */
+  --room-light-floor-background:
+    radial-gradient(circle at 30% 40%, rgba(0, 0, 0, 0.07) 0 1px, transparent 1.5px) 0 0 / 23px 23px,
+    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.35) 0 1px, transparent 1.5px) 0 0 / 37px 37px,
+    radial-gradient(ellipse 60% 45% at 50% 50%, rgba(255, 255, 255, 0.28), transparent 70%),
+    linear-gradient(180deg, #b4b3af 0%, #c9c8c4 50%, #b9b8b4 100%);
+  --room-light-floor-shadow: 0 0 140px rgba(0, 0, 0, 0.22) inset;
+
+  --room-light-wall-shadow: 0 0 60px rgba(0, 0, 0, 0.05), 0 0 120px rgba(0, 0, 0, 0.09) inset;
   --room-light-text-color: #111; /* 작품 제목 글자 */
 
+  /* 번호 버튼: 각진 미니멀 (흰 바탕·검은 테두리, 지금 벽은 검정) */
+  --room-light-button-background: #fff;
+  --room-light-button-color: #111;
+  --room-light-button-border: 1px solid #111;
+  --room-light-button-shadow: none;
+  --room-light-button-current-background: #111;
+  --room-light-button-current-color: #fff;
+  --room-light-button-current-border: 1px solid #111;
+  --room-light-button-current-shadow: none;
+  --room-light-icon-color: #111;
+
   /* ----- 액자 ----- */
-  --frame-color: #111; /* 테두리 색 */
-  --frame-border-image: none; /* 테두리를 그라데이션으로 할 때 (예: 금색) */
-  --frame-width: 4px; /* 테두리 두께 */
-  --frame-mat-color: #fff; /* 그림과 테두리 사이 여백 색 */
-  --frame-mat-size: 0px; /* 여백 두께 */
-  --frame-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+  /* 얇은 무광 블랙 박스 프레임(빛 받는 결) + 넓은 흰 매트 */
+  --frame-color: #141414; /* 테두리 색 */
+  --frame-border-image: linear-gradient(135deg, #3a3a3a 0%, #121212 22%, #1c1c1c 55%, #0b0b0b 78%, #2a2a2a 100%) 1;
+  --frame-width: 7px; /* 테두리 두께 */
+  --frame-mat-color: #fdfcfa; /* 그림과 테두리 사이 여백 색 */
+  --frame-mat-size: 16px; /* 여백 두께 */
+  /* 매트 안쪽 음영(프레임 깊이) + 벽에서 살짝 떠 있는 접촉 그림자 + 넓고 옅은 드롭 */
+  --frame-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+    inset 0 3px 6px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 6px 12px rgba(0, 0, 0, 0.1),
+    0 24px 44px -10px rgba(0, 0, 0, 0.28);
 
   /* ----- 문 ----- */
   --door-frame-color: #222;
@@ -24,4 +63,78 @@
   --door-passage: linear-gradient(#ffffff, #e9e9e6); /* 문 너머 옆 방 */
   --door-sign-background: #111;
   --door-sign-color: #fff;
+}
+
+/* ===== 작품 조명: 그림 뒤 벽에 위에서 떨어지는 스포트라이트 빛 (클릭 판정·확대에 영향 없음) ===== */
+.gallery--moma .room-wall .item-image::before {
+  content: "";
+  position: absolute;
+  inset: -14% 8% -6%;
+  background: radial-gradient(ellipse 50% 58% at 50% 36%, #fffdf8, rgba(255, 253, 247, 0.55) 55%, transparent 76%);
+  opacity: 0.75;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.gallery--moma .room-item.item-active .item-image::before {
+  opacity: 1;
+}
+
+/* ===== 월 라벨: 미술관 캡션처럼 작고 단정하게 (검은 짧은 선 + 제목 + 작가·연도) ===== */
+.gallery--moma .room-wall .item-desc {
+  gap: 3px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.gallery--moma .room-wall .item-desc::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  margin-bottom: 8px;
+  background: #111;
+}
+
+.gallery--moma .room-wall .item-desc p {
+  margin: 0;
+  color: #111;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.gallery--moma .room-wall .item-desc span {
+  color: #6b6b6b;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+/* ===== 번호 버튼: 각진 모서리, 산세리프 ===== */
+.gallery--moma .room-gallery .room-paginations button {
+  border-radius: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ===== 좌우 화살표: 얇은 선, 올리면 검은 정사각 블록 + 흰 아이콘 ===== */
+.gallery--moma .gallery-room-arrow {
+  border-radius: 0;
+  color: #111;
+  opacity: 0.85;
+}
+
+.gallery--moma .gallery-room-arrow svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.gallery--moma .gallery-room-arrow:hover,
+.gallery--moma .gallery-room-arrow:focus-visible {
+  opacity: 1;
+  background: #111;
+  color: #fff;
 }
