@@ -1,56 +1,199 @@
-/* MomaDoor.css: MoMA 개구부 모양 - 틀 없이 벽을 잘라낸 통로 */
+/* MomaDoor.css: MoMA 개구부 - 얇은 검은 철제 테두리, 안쪽에 원근으로 그린 옆 전시실, 큰 번호 표지
+   옆 방 원근 기준: 안쪽 벽이 왼쪽 24% ~ 오른쪽 76%, 위 20% ~ 아래 68% */
 
 .moma-door {
   aspect-ratio: 1 / 1.7;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
-/* 통로 위 표지 (왼쪽 정렬, 굵은 산세리프) */
-.moma-door-label {
+/* ===== 표지 ===== */
+.moma-door-sign {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: stretch;
+  gap: 10px;
   margin-bottom: 6%;
   color: #111;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   white-space: nowrap;
 }
 
-.moma-door-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.6em;
-  height: 1.6em;
-  background: #111;
-  color: #fff;
+/* 큰 전시실 번호 */
+.moma-door-number {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
 }
 
-/* 벽에 뚫린 통로: 안쪽 그림자로 벽 두께 표현 */
+.moma-door-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-left: 10px;
+  border-left: 1px solid #111;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.moma-door-eyebrow {
+  color: #777;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* 화살표 블록: 오른쪽 끝, 올리면 화살표가 살짝 밀림 */
+.moma-door-arrow {
+  display: inline-flex;
+  align-self: flex-end;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin-left: auto;
+  background: #111;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: transform 0.35s ease;
+}
+
+.wall-door.moma-door:hover .moma-door-arrow {
+  transform: translateX(4px);
+}
+
+/* ===== 개구부: 얇은 검은 철제 테두리 + 벽 두께 그림자 ===== */
 .moma-door-opening {
   position: relative;
   width: 100%;
   height: 80%;
   overflow: hidden;
-  background: linear-gradient(180deg, #ffffff 0%, #ececea 100%);
+  box-sizing: border-box;
+  border: 4px solid #161616;
+  border-bottom: 0;
+  background: #f4f3f0;
   box-shadow:
-    inset 14px 0 24px rgba(0, 0, 0, 0.1),
-    inset -4px 0 10px rgba(0, 0, 0, 0.05),
-    inset 0 12px 20px rgba(0, 0, 0, 0.08);
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 10px 30px -6px rgba(0, 0, 0, 0.18);
 }
 
-/* 통로 안쪽 빛 (마우스를 올리면 밝아짐) */
+/* 벽 두께: 테두리 안쪽에 드리운 그림자 (방 그림 위에 겹침) */
+.moma-door-opening::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  box-shadow:
+    inset 12px 0 18px -6px rgba(0, 0, 0, 0.18),
+    inset 0 12px 18px -8px rgba(0, 0, 0, 0.16);
+  pointer-events: none;
+}
+
+/* ===== 옆 전시실 (원근) ===== */
+.moma-door-room {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 55%;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.7s ease;
+  filter: brightness(0.97);
+}
+
+.wall-door.moma-door:hover .moma-door-room {
+  transform: scale(1.07);
+  filter: brightness(1.04);
+}
+
+.moma-door-face {
+  position: absolute;
+  inset: 0;
+}
+
+/* 천장: 가운데 리니어 조명 한 줄 */
+.moma-door-ceil {
+  clip-path: polygon(0 0, 100% 0, 76% 20%, 24% 20%);
+  background:
+    linear-gradient(90deg, transparent 49.2%, rgba(255, 255, 255, 1) 49.2% 50.8%, transparent 50.8%),
+    linear-gradient(180deg, #e9e8e4, #f6f5f2 20%);
+}
+
+.moma-door-left {
+  clip-path: polygon(0 0, 24% 20%, 24% 68%, 0 100%);
+  background: linear-gradient(90deg, #e2e1dc, #eeede9 24%);
+}
+
+.moma-door-right {
+  clip-path: polygon(100% 0, 76% 20%, 76% 68%, 100% 100%);
+  background: linear-gradient(270deg, #f2f1ee, #f8f7f4 24%);
+}
+
+/* 바닥: 콘크리트 + 안쪽에서 비치는 반사광 */
+.moma-door-floor {
+  clip-path: polygon(24% 68%, 76% 68%, 100% 100%, 0 100%);
+  background:
+    radial-gradient(ellipse 40% 30% at 50% 70%, rgba(255, 255, 255, 0.55), transparent 70%),
+    linear-gradient(180deg, #c9c8c4 68%, #b3b2ae 100%);
+}
+
+/* 안쪽 벽 + 걸린 작품 두 점 */
+.moma-door-back {
+  position: absolute;
+  top: 20%;
+  right: 24%;
+  bottom: 32%;
+  left: 24%;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, #ffffff, transparent 80%),
+    #f6f5f2;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+}
+
+.moma-door-art {
+  position: absolute;
+  top: 34%;
+  box-sizing: border-box;
+  border: 1px solid #1a1a1a;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+}
+
+.moma-door-art--a {
+  left: 16%;
+  width: 34%;
+  height: 34%;
+  background: linear-gradient(135deg, #d6463b 0 45%, #f2c94c 45% 70%, #2d4b8e 70%);
+}
+
+.moma-door-art--b {
+  right: 16%;
+  width: 24%;
+  height: 40%;
+  top: 30%;
+  background: linear-gradient(180deg, #1f1f1f 0 30%, #e9e5dc 30% 62%, #7a8b6f 62%);
+}
+
+/* 오른쪽 벽의 작품 (원근으로 기울어짐) */
+.moma-door-side-art {
+  position: absolute;
+  top: 32%;
+  right: 6%;
+  width: 11%;
+  height: 22%;
+  clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 88%);
+  background: linear-gradient(160deg, #3a3a3a, #8c8c8c);
+}
+
+/* 안쪽에서 새어 나오는 빛 (마우스를 올리면 밝아짐) */
 .moma-door-glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 60% 70%, rgba(255, 255, 255, 0.95), transparent 65%);
-  opacity: 0.5;
-  transition: opacity 0.4s ease;
+  z-index: 1;
+  background: radial-gradient(ellipse 45% 40% at 50% 45%, rgba(255, 255, 255, 0.7), transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
 .wall-door.moma-door:hover .moma-door-glow {
-  opacity: 1;
+  opacity: 0.9;
 }

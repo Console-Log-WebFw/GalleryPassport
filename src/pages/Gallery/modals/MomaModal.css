@@ -1,83 +1,235 @@
-/* MomaModal.css: MoMA 작품 모달 모양 - 미술관 벽 라벨처럼 흰 바탕 + 검정 굵은 산세리프 (기본 모달 위에 덮어씀) */
+/* MomaModal.css: MoMA 작품 모달 모양 - 왼쪽은 조명 받은 전시 벽에 걸린 작품, 오른쪽은 미술관 캡션식 정보
+   (기본 모달 ArtworkModal 구조 위에 덮어씀) */
 
+/* ===== 배경: 밝은 반투명 + 흐림 ===== */
 .artwork-modal--moma {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(244, 243, 240, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: moma-modal-fade 0.35s ease both;
 }
 
 .artwork-modal--moma .artwork-modal {
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   border-radius: 0;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  color: #111;
-}
-
-/* 그림 영역: 회색 배경 없이 넓은 여백 */
-.artwork-modal--moma .artwork-modal-visual {
-  padding: 48px;
   background: #fff;
-}
-
-.artwork-modal--moma .artwork-modal-body {
-  padding: 56px 40px 32px;
-  border-left: 1px solid #111;
-}
-
-.artwork-modal--moma .artwork-modal-title {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-}
-
-.artwork-modal--moma .artwork-modal-title-en {
-  color: #555;
-}
-
-/* 작가·연도·재료: 라벨 없이 굵기만 다른 벽 라벨 느낌 */
-.artwork-modal--moma .artwork-modal-info {
-  border-top: 2px solid #111;
-  border-bottom: 0;
-}
-
-.artwork-modal--moma .artwork-modal-info dt {
-  display: none;
-}
-
-.artwork-modal--moma .artwork-modal-info div:first-child dd {
-  font-weight: 700;
-}
-
-.artwork-modal--moma .artwork-modal-section h3 {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 40px 80px -20px rgba(0, 0, 0, 0.35);
   color: #111;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  animation: moma-modal-rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* 이전/다음: 검정 띠 */
-.artwork-modal--moma .artwork-modal-nav {
-  border-top: 0;
+@keyframes moma-modal-fade {
+  from { opacity: 0; }
+}
+
+@keyframes moma-modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+}
+
+/* ===== 닫기: 검은 정사각 블록 ===== */
+.artwork-modal--moma .artwork-modal-close {
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  background: #111;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  transition: background-color 0.2s ease;
+}
+
+.artwork-modal--moma .artwork-modal-close:hover {
+  background: #e4002b;
+}
+
+/* ===== 그림: 액자 없이 왼쪽 칸을 꽉 채움 =====
+   왼쪽 칸 너비가 그림 비율을 따라가서(높이 꽉 + 너비 자동) 보통은 잘리지 않고,
+   아주 가로로 긴 그림만 최대 너비를 넘는 양옆을 최소한으로 잘라 냄 */
+.artwork-modal--moma .artwork-modal {
+  grid-template-columns: auto minmax(340px, 1fr);
+}
+
+.artwork-modal--moma .artwork-modal-visual {
+  padding: 0;
+  overflow: hidden;
   background: #111;
 }
 
-.artwork-modal--moma .artwork-modal-nav button {
+.artwork-modal--moma .artwork-modal-image {
+  width: auto;
+  height: 100%;
+  max-width: calc(min(1040px, 100vw - 32px) - 340px); /* 모달 너비 - 설명 칸 최소 너비 = 그림이 쓸 수 있는 최대 */
+  max-height: none;
+  object-fit: cover;
+}
+
+/* ===== 정보 ===== */
+.artwork-modal--moma .artwork-modal-body {
+  padding: 64px 44px 36px;
+  scrollbar-width: thin;
+  scrollbar-color: #111 transparent;
+}
+
+/* 제목 위 작은 머리글 */
+.artwork-modal--moma .artwork-modal-body::before {
+  content: "Collection";
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 4px 8px;
+  background: #111;
   color: #fff;
+  font-size: 10px;
   font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.artwork-modal--moma .artwork-modal-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+}
+
+.artwork-modal--moma .artwork-modal-title-en {
+  margin-top: 8px;
+  color: #6b6b6b;
+  font-size: 15px;
+}
+
+/* 작가·연도·재료: 굵은 선 아래 작은 라벨 + 값 */
+.artwork-modal--moma .artwork-modal-info {
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 14px 18px;
+  margin-top: 26px;
+  padding: 16px 0 18px;
+  border-top: 2px solid #111;
+  border-bottom: 1px solid #e3e3e0;
+}
+
+.artwork-modal--moma .artwork-modal-info div {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.artwork-modal--moma .artwork-modal-info dt {
+  flex: none;
+  color: #8a8a8a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.artwork-modal--moma .artwork-modal-info dd {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 작품 설명 / 도슨트 */
+.artwork-modal--moma .artwork-modal-section {
+  margin-top: 30px;
+}
+
+.artwork-modal--moma .artwork-modal-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: #111;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.artwork-modal--moma .artwork-modal-section h3::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e3e3e0;
+}
+
+.artwork-modal--moma .artwork-modal-section p {
+  color: #2b2b2b;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.artwork-modal--moma .artwork-modal-section .artwork-modal-empty {
+  color: #a8a8a8;
+}
+
+.artwork-modal--moma .artwork-modal-credit {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid #e3e3e0;
+  color: #8a8a8a;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+/* ===== 이전/다음: 흰 띠 + 검은 선, 올리면 검게 반전 ===== */
+.artwork-modal--moma .artwork-modal-nav {
+  padding: 0;
+  border-top: 1px solid #111;
+  background: #fff;
+}
+
+.artwork-modal--moma .artwork-modal-nav button {
+  flex: 1;
+  padding: 16px 24px;
+  border-radius: 0;
+  color: #111;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: left;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.artwork-modal--moma .artwork-modal-nav button + button {
+  border-left: 1px solid #111;
+  text-align: right;
 }
 
 .artwork-modal--moma .artwork-modal-nav button:hover {
-  background: #333;
+  background: #111;
+  color: #fff;
 }
 
 @media (max-width: 720px) {
-  .artwork-modal--moma .artwork-modal-visual {
-    padding: 24px;
+  .artwork-modal--moma .artwork-modal {
+    grid-template-columns: 1fr;
+  }
+
+  /* 좁은 화면: 너비 꽉 + 높이 자동, 아주 세로로 긴 그림만 위아래를 최소한으로 잘라 냄 */
+  .artwork-modal--moma .artwork-modal-image {
+    width: 100%;
+    height: auto;
+    max-width: none;
+    max-height: 60dvh;
   }
 
   .artwork-modal--moma .artwork-modal-body {
-    padding: 24px 20px;
-    border-left: 0;
-    border-top: 1px solid #111;
+    padding: 28px 22px;
+  }
+
+  .artwork-modal--moma .artwork-modal-title {
+    font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artwork-modal--moma,
+  .artwork-modal--moma .artwork-modal {
+    animation: none;
   }
 }
