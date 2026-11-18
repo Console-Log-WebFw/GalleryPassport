@@ -3,8 +3,8 @@
 import GalleryHeader from "./GalleryHeader";
 import "./MomaHeader.css";
 
-const MomaHeader = ({ museum, room }) => (
-  <GalleryHeader museum={museum} room={room} className="gallery-header--moma" />
+const MomaHeader = (props) => (
+  <GalleryHeader {...props} className="gallery-header--moma" />
 );
 
 export default MomaHeader;

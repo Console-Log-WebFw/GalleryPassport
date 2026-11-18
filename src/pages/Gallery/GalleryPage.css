@@ -23,6 +23,23 @@ html.gallery-immersive.header-hidden .header {
   transform: translateY(-100%);
 }
 
+/* 메뉴 헤더가 내려와 있으면(토글) 박물관 이름 줄·미니맵도 그만큼 내려가 겹치지 않음 */
+html.gallery-immersive .gallery-header {
+  transition: transform 0.35s ease;
+}
+
+html.gallery-immersive:not(.header-hidden) .gallery-header {
+  transform: translateY(64px);
+}
+
+html.gallery-immersive .gallery-minimap {
+  transition: top 0.35s ease;
+}
+
+html.gallery-immersive:not(.header-hidden) .gallery-minimap {
+  top: calc(14px + 64px); /* 내려온 박물관 이름 줄 아래 */
+}
+
 .gallery-missing {
   padding: 32px;
 }
@@ -56,6 +73,57 @@ html.gallery-immersive.header-hidden .header {
 .gallery-stage.is-leaving .gallery-room {
   transform: scale(1.12);
   transition: transform 0.45s ease-in;
+}
+
+/* ===== 왼쪽 아래 떠 있는 뒤로가기 (미니맵과 같은 어두운 유리 톤) ===== */
+.gallery-back-fab {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 30; /* 방, 이동 연출 위 */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(22, 22, 26, 0.72);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  color: #f2f2f2;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-back-fab:hover {
+  transform: translateY(-3px);
+  background: rgba(22, 22, 26, 0.88);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+}
+
+.gallery-back-fab svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 좁은 화면: 아이콘만 */
+@media (max-width: 600px) {
+  .gallery-back-fab {
+    left: 10px;
+    bottom: 10px;
+    padding: 10px;
+  }
+
+  .gallery-back-fab span {
+    display: none;
+  }
 }
 
 @keyframes gallery-enter {

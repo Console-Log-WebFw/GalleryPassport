@@ -15,30 +15,109 @@
   color: #222;
 }
 
-.gallery-header-back {
+/* ----- 왼쪽: 본 작품 수 + 진행 막대 ----- */
+.gallery-header-count {
   justify-self: start;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  color: inherit;
-  transition: background 0.2s ease;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  color: #555;
+  transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
 
-.gallery-header-back:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-.gallery-header-back svg {
-  width: 18px;
-  height: 18px;
+.gallery-header-count svg {
+  width: 15px;
+  height: 15px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.gallery-header-count-num strong {
+  font-size: 13px;
+  color: #222;
+}
+
+.gallery-header-count-bar {
+  position: relative;
+  width: 48px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.gallery-header-count-bar span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: #1f4d3a;
+  transition: width 0.5s ease;
+}
+
+/* 다 봤을 때: 금색 */
+.gallery-header-count.is-complete {
+  border-color: #d4a73c;
+  background: linear-gradient(135deg, #fff6d8, #f3dc9a);
+  color: #7a5a12;
+}
+
+.gallery-header-count.is-complete .gallery-header-count-num strong {
+  color: #7a5a12;
+}
+
+.gallery-header-count.is-complete .gallery-header-count-bar span {
+  background: linear-gradient(90deg, #e8c25a, #b8860b);
+}
+
+/* ----- 오른쪽: 방 이름 + 메뉴 헤더 토글 ----- */
+.gallery-header-right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gallery-header-menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gallery-header-menu:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.gallery-header-menu svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s ease;
+}
+
+/* 메뉴가 내려와 있으면 꺾쇠가 위를 향함 */
+.gallery-header-menu.is-open svg {
+  transform: rotate(180deg);
 }
 
 .gallery-header-title {
@@ -64,7 +143,6 @@
 }
 
 .gallery-header-room {
-  justify-self: end;
   padding: 3px 10px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 999px;
@@ -72,9 +150,11 @@
   color: #555;
 }
 
-/* 좁은 화면: 영문명 숨김 */
+/* 좁은 화면: 영문명·진행 막대·방 이름 숨김 */
 @media (max-width: 600px) {
-  .gallery-header-name-en {
+  .gallery-header-name-en,
+  .gallery-header-count-bar,
+  .gallery-header-room {
     display: none;
   }
 }

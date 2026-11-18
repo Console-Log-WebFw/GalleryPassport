@@ -48,8 +48,9 @@ const turnDegrees = (fromY, toY, dir) => {
 /*
  * facing: 문으로 들어왔을 때 진행 방향 / fromRoomId: 이전 방 id (이 방으로 들어온 문을 바라보며 시작, 없으면 facing → 정면)
  * onDoor(room, dir): 문 클릭 / onFacingChange(dir): 바라보는 벽 방향이 바뀔 때 (미니맵 표시용)
+ * onView(artworkId): 작품 상세를 열었을 때 (본 작품 수 세기용 - 여권이 없어도 이번 관람 동안 셈)
  */
-const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange }) => {
+const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange, onView }) => {
   const roomRef = useRef(null); // room-gallery 조작용 (getCurrentItem 등)
   const wrapRef = useRef(null);
   const [modalIndex, setModalIndex] = useState(null); // 모달에 보여줄 작품 번호 (null = 닫힘)
@@ -322,7 +323,9 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange 
   /* 작품 상세 모달이 열리거나 이전/다음으로 바뀔 때, 그 작품을 본 것으로 여권에 기록 */
   useEffect(() => {
     const artwork = modalIndex !== null ? artworks[modalIndex] : null;
-    if (artwork) viewArtwork(museum, artwork.id);
+    if (!artwork) return;
+    viewArtwork(museum, artwork.id);
+    onView?.(artwork.id);
   }, [modalIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

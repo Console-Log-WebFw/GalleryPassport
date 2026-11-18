@@ -3,7 +3,13 @@
 import { Link } from "react-router-dom";
 import { MUSEUMS } from "../../../data/museums";
 import { getArtworkImage } from "../../../utils/artworkImage";
+import homeMarkers from "../../../constants/homeMarkers";
 import "./MuseumList.css";
+
+/* 카드 사진: 홈 화면 카드와 같은 {박물관}_modal 사진 (없으면 박물관 JSON 의 대표 작품) */
+const getCardImage = (museum) =>
+  homeMarkers.find((m) => m.id === museum.id)?.modalImg ||
+  getArtworkImage(museum.coverImage);
 
 /* 소개 글을 문단(빈 줄로 구분) 목록으로 */
 const getParagraphs = (text) =>
@@ -23,7 +29,7 @@ const MuseumList = () => (
       {MUSEUMS.map((museum) => (
         <li key={museum.id}>
           <Link to={`/gallery/${museum.id}`} className="museum-list-card">
-            <img src={getArtworkImage(museum.coverImage)} alt="" />
+            <img src={getCardImage(museum)} alt="" />
             <div className="museum-list-body">
               <strong className="museum-list-name">{museum.name}</strong>
               <span className="museum-list-name-en">{museum.nameEn}</span>

@@ -1,4 +1,4 @@
-/* GalleryPage.jsx: 갤러리 페이지 - /gallery 는 박물관 선택, /gallery/:museumId/:roomId? 는 전시관(헤더 + 방 + 미니맵) */
+/* GalleryPage.jsx: 갤러리 페이지 - /gallery 는 박물관 선택, /gallery/:museumId/:roomId? 는 전시관(헤더 + 방 + 미니맵 + 뒤로가기 + 관람 완료 연출) */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -6,14 +6,18 @@ import { getMuseum, getRoom } from "../../data/museums";
 import MuseumList from "./components/MuseumList";
 import GalleryRoom from "./components/GalleryRoom";
 import GalleryMinimap from "./components/GalleryMinimap";
+import GalleryComplete from "./components/GalleryComplete";
+import { usePassport } from "../../context/PassportContext";
 import { getGalleryHeader } from "./headers";
 import "./interiors"; // 박물관별 벽·바닥·액자·문 디자인
 import "./GalleryPage.css";
 
 const FADE_MS = 450; // 문을 지날 때 화면이 어두워지는 시간 (GalleryPage.css 와 맞춤)
 const HEADER_HIDE_MS = 800; // 전시관에 들어온 뒤 공통 헤더가 올라가기까지 시간
-const HEADER_PEEK_PX = 12; // 마우스가 화면 맨 위 이만큼 안에 오면 헤더가 다시 내려옴
-const HEADER_HEIGHT_PX = 64; // 공통 헤더 높이 (Header.css 의 --header-height 와 맞춤)
+
+/* 박물관 전체 작품 수 */
+const countArtworks = (museum) =>
+  museum ? museum.rooms.reduce((sum, room) => sum + room.artworks.length, 0) : 0;
 
 const GalleryPage = () => {
   const { museumId, roomId } = useParams();
@@ -21,6 +25,10 @@ const GalleryPage = () => {
   const navigate = useNavigate();
   const [leaving, setLeaving] = useState(false); // 다른 방으로 넘어가는 중 (화면 어두워짐)
   const [facing, setFacing] = useState("n"); // 지금 바라보는 벽 방향 (미니맵 표시)
+  const [menuOpen, setMenuOpen] = useState(true); // 공통 메뉴 헤더(로고·메뉴)가 내려와 있는지
+  const [sessionViewed, setSessionViewed] = useState({}); // 이번 관람에서 연 작품 { 박물관 id: [작품 id] } - 여권 없이도 셈
+  const [celebrating, setCelebrating] = useState(false); // "다 봤습니다" 연출 중
+  const { state: passportState } = usePassport();
   const timerRef = useRef(null);
 
   const museum = museumId ? getMuseum(museumId) : null;
@@ -42,8 +50,9 @@ const GalleryPage = () => {
   );
 
   /*
-   * 전시관 몰입 모드: 들어오고 잠시 뒤 공통 헤더(.header)가 위로 올라가고, 마우스를 화면 맨 위로 가져가면 다시 내려옴
+   * 전시관 몰입 모드: 들어오고 잠시 뒤 공통 헤더(.header)가 위로 올라가고, 박물관 이름 줄의 토글 버튼으로 다시 내림
    * - 공통 헤더 파일(Header.jsx/css)은 건드리지 않고 <html> 클래스로만 조절 (스타일은 GalleryPage.css)
+   * - 메뉴가 내려오면 박물관 이름 줄·미니맵도 같이 내려가 겹치지 않음
    * - 전시관을 떠나면 클래스를 지워 다른 페이지 헤더는 그대로
    */
   const inGallery = Boolean(museum);
@@ -51,23 +60,50 @@ const GalleryPage = () => {
     if (!inGallery) return;
     const { classList } = document.documentElement; // room-gallery 가 높이 변수를 <html> 에 달아서 같은 곳에 붙임
     classList.add("gallery-immersive");
-    const hideTimer = setTimeout(() => classList.add("header-hidden"), HEADER_HIDE_MS);
-
-    const handleMouseMove = (e) => {
-      if (e.clientY <= HEADER_PEEK_PX) classList.remove("header-hidden");
-      // 헤더의 펼침 메뉴·언어 목록 위에 있을 때는 올리지 않음
-      else if (e.clientY > HEADER_HEIGHT_PX && !e.target.closest?.(".header")) {
-        classList.add("header-hidden");
-      }
-    };
-    document.addEventListener("mousemove", handleMouseMove);
-
+    setMenuOpen(true);
+    const hideTimer = setTimeout(() => setMenuOpen(false), HEADER_HIDE_MS);
     return () => {
       clearTimeout(hideTimer);
-      document.removeEventListener("mousemove", handleMouseMove);
       classList.remove("gallery-immersive", "header-hidden");
     };
   }, [inGallery]);
+
+  useEffect(() => {
+    if (inGallery) document.documentElement.classList.toggle("header-hidden", !menuOpen);
+  }, [inGallery, menuOpen]);
+
+  /* 본 작품 수: 여권 기록 + 이번 관람에서 연 작품 (겹치는 건 한 번만) */
+  const total = countArtworks(museum);
+  const viewedCount = museum
+    ? new Set([
+        ...(passportState.viewed?.[museum.id] || []),
+        ...(sessionViewed[museum.id] || []),
+      ]).size
+    : 0;
+
+  const handleView = useCallback(
+    (artworkId) => {
+      if (!museum) return;
+      setSessionViewed((prev) => {
+        const seen = prev[museum.id] || [];
+        return seen.includes(artworkId) ? prev : { ...prev, [museum.id]: [...seen, artworkId] };
+      });
+    },
+    [museum],
+  );
+
+  /* 이번 관람 중에 마지막 작품을 본 순간에만 "다 봤습니다" 연출 (이미 다 본 박물관에 들어올 때는 안 뜸) */
+  const prevCountRef = useRef({ museumId: null, count: 0 });
+  useEffect(() => {
+    const prev = prevCountRef.current;
+    if (prev.museumId === museumId && prev.count < total && viewedCount >= total && total > 0) {
+      setCelebrating(true);
+    }
+    prevCountRef.current = { museumId, count: viewedCount };
+  }, [museumId, viewedCount, total]);
+
+  /* 다른 박물관으로 가면 연출 닫기 */
+  useEffect(() => setCelebrating(false), [museumId]);
 
   /* 새 방이 그려지면 다시 밝게 */
   useEffect(() => {
@@ -90,7 +126,14 @@ const GalleryPage = () => {
 
   return (
     <section className={`gallery gallery--${museum.id}`}>
-      <Header museum={museum} room={room} />
+      <Header
+        museum={museum}
+        room={room}
+        viewedCount={viewedCount}
+        total={total}
+        menuOpen={menuOpen}
+        onToggleMenu={() => setMenuOpen((open) => !open)}
+      />
       <div className={"gallery-stage" + (leaving ? " is-leaving" : "")}>
         {/* key: 방이 바뀌면 room-gallery를 새로 그림 */}
         <GalleryRoom
@@ -101,6 +144,7 @@ const GalleryPage = () => {
           fromRoomId={state?.fromRoomId}
           onDoor={goToRoom}
           onFacingChange={setFacing}
+          onView={handleView}
         />
         <GalleryMinimap
           rooms={museum.rooms}
@@ -108,7 +152,24 @@ const GalleryPage = () => {
           facing={facing}
           onSelect={(next) => goToRoom(next)}
         />
+
+        {/* 왼쪽 아래 떠 있는 뒤로가기 - 방 클릭 처리(GalleryRoom)와 겹치지 않게 방 바깥에 둠 */}
+        <Link to="/gallery" className="gallery-back-fab" aria-label="갤러리 목록으로">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" />
+          </svg>
+          <span>갤러리 목록</span>
+        </Link>
       </div>
+
+      {celebrating && (
+        <GalleryComplete
+          museum={museum}
+          total={total}
+          hasPassport={Boolean(passportState.passport)}
+          onClose={() => setCelebrating(false)}
+        />
+      )}
     </section>
   );
 };
