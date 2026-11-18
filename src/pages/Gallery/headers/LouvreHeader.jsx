@@ -3,8 +3,8 @@
 import GalleryHeader from "./GalleryHeader";
 import "./LouvreHeader.css";
 
-const LouvreHeader = ({ museum, room }) => (
-  <GalleryHeader museum={museum} room={room} className="gallery-header--louvre" />
+const LouvreHeader = (props) => (
+  <GalleryHeader {...props} className="gallery-header--louvre" />
 );
 
 export default LouvreHeader;

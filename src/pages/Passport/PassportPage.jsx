@@ -1,5 +1,6 @@
 /* PassportPage.jsx: 내 여권 화면 - 발급 전에는 발급 폼, 발급 후에는 여권(내 정보 + 스탬프) */
 
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePassport } from "../../context/PassportContext";
 import { getLevel } from "../../constants/level";
@@ -28,11 +29,28 @@ const mrz = (number) => {
   return [pad(`P<GPKR${number}`, 38), pad(`${number}0KOR`, 38)];
 };
 
+const HIGHLIGHT_MS = 4500; // 갤러리에서 막 받은 도장을 강조하는 시간
+
 const PassportPage = () => {
   const { state } = usePassport();
   const { passport } = state;
   const navigate = useNavigate();
   const location = useLocation();
+
+  /*
+   * 갤러리 "다 봤습니다" 창에서 넘어오면 (state.highlightStamp = 박물관 id) 그 도장을 잠시 강조하고 화면에 보이게 스크롤
+   * - 새로고침·뒤로가기로 다시 강조되지 않게 주소의 state 는 바로 지움
+   */
+  const [highlightId, setHighlightId] = useState(() => location.state?.highlightStamp ?? null);
+  const stampsRef = useRef(null);
+  useEffect(() => {
+    if (!highlightId) return;
+    navigate(location.pathname, { replace: true, state: null });
+    const stamp = stampsRef.current?.querySelector(".stamp.is-highlight");
+    stamp?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const timer = setTimeout(() => setHighlightId(null), HIGHLIGHT_MS);
+    return () => clearTimeout(timer);
+  }, [highlightId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* 이전 화면이 있으면 그쪽으로, 주소를 바로 열어서 들어왔으면 홈으로 */
   const goBack = () => (location.key !== "default" ? navigate(-1) : navigate("/"));
@@ -155,9 +173,15 @@ const PassportPage = () => {
               <h2 className="passport-section-title">스탬프 컬렉션</h2>
               <span className="passport-stamps-count">{count} / {total}</span>
             </div>
-            <div className="passport-stamps">
+            <div className="passport-stamps" ref={stampsRef}>
               {museums.map((m) => (
-                <StampCard key={m.id} museum={m} visitedAt={visitDate(m.id)} progress={progressOf(m.id)} />
+                <StampCard
+                  key={m.id}
+                  museum={m}
+                  visitedAt={visitDate(m.id)}
+                  progress={progressOf(m.id)}
+                  highlighted={highlightId === m.id}
+                />
               ))}
             </div>
             {/* 장식: 흐린 원형 도장 */}

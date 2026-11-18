@@ -69,3 +69,95 @@
   border-color: #d3ccc0;
 }
 .stamp.is-empty .stamp-art { opacity: 0.45; }
+
+/* ===== 갤러리를 막 다 보고 넘어온 도장: 위에서 쾅 찍히고 → 빛이 몇 번 퍼짐 → NEW 표시 (PassportPage 가 4.5초 뒤 해제) =====
+   기울임(transform)과 겹치지 않게 scale 속성으로 움직임 */
+.stamp {
+  position: relative;
+}
+
+.stamp.is-highlight {
+  z-index: 2;
+  animation:
+    stamp-slam 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) 0.35s both,
+    stamp-glow 1.2s ease-out 1s 3;
+}
+
+/* 도장 주위로 퍼지는 링 */
+.stamp.is-highlight::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 3px solid currentColor;
+  border-radius: 26px;
+  pointer-events: none;
+  animation: stamp-ring 1.2s ease-out 1s 3 both;
+}
+
+.stamp-new {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  z-index: 1;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  -webkit-text-fill-color: #fff; /* 배경은 박물관 색(currentColor), 글자는 흰색 */
+  animation: stamp-new 0.5s cubic-bezier(0.3, 1.8, 0.5, 1) 1s both;
+}
+
+@keyframes stamp-slam {
+  0% {
+    opacity: 0;
+    scale: 2.4;
+  }
+  60% {
+    opacity: 1;
+    scale: 0.92;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes stamp-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(232, 194, 90, 0.9), 0 0 0 rgba(232, 194, 90, 0);
+  }
+  40% {
+    box-shadow: 0 0 0 6px rgba(232, 194, 90, 0.45), 0 0 36px rgba(232, 194, 90, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(232, 194, 90, 0), 0 0 0 rgba(232, 194, 90, 0);
+  }
+}
+
+@keyframes stamp-ring {
+  from {
+    opacity: 0.8;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.25;
+  }
+}
+
+@keyframes stamp-new {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp.is-highlight,
+  .stamp.is-highlight::after,
+  .stamp-new {
+    animation-duration: 0.01ms;
+  }
+}

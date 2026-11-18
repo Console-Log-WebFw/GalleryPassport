@@ -3,8 +3,8 @@
 import GalleryHeader from "./GalleryHeader";
 import "./NationalMuseumKoreaHeader.css";
 
-const NationalMuseumKoreaHeader = ({ museum, room }) => (
-  <GalleryHeader museum={museum} room={room} className="gallery-header--national-museum-korea" />
+const NationalMuseumKoreaHeader = (props) => (
+  <GalleryHeader {...props} className="gallery-header--national-museum-korea" />
 );
 
 export default NationalMuseumKoreaHeader;

@@ -1,17 +1,142 @@
 /* MuseumList.css: 박물관 선택 화면 스타일 */
 
+/* 화면 전체 배경: 여권 화면처럼 투명 헤더 뒤까지 배경 이미지가 보이게 위로 끌어올림 */
+.museum-list-page {
+  margin-top: calc(-1 * var(--header-height, 0px));
+  padding-top: var(--header-height, 0px);
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: #f6f1ea url("../../../assets/images/home/bg_gallery-entry.png") center / cover no-repeat; /* 이미지가 안 뜰 때를 대비한 바탕색 */
+}
+
 .museum-list {
-  padding: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 32px 24px; /* 한 화면(약 900px)에 스크롤 없이 들어오도록 위아래 여백을 줄임 */
+  text-align: center;
+}
+
+/* ===== 머리말: 홈 화면 소개 문구(작은 글씨 → 세리프 큰 제목 → 설명)와 같은 톤 ===== */
+.museum-list-hero {
+  margin: 0 auto;
+  color: #1f4d3a; /* 헤더 로고와 같은 진한 초록 */
+}
+
+.museum-list-hero > * {
+  animation: museum-list-rise 0.6s ease-out both;
+}
+.museum-list-hero > :nth-child(2) { animation-delay: 0.08s; }
+.museum-list-hero > :nth-child(3) { animation-delay: 0.16s; }
+.museum-list-hero > :nth-child(4) { animation-delay: 0.24s; }
+.museum-list-hero > :nth-child(5) { animation-delay: 0.32s; }
+
+.museum-list-eyebrow {
+  margin: 0 0 8px;
+  font-size: 13px;
+  letter-spacing: 0.12em; /* 한글이라 영문보다 조금만 넓게 */
+  color: #555;
+}
+
+.museum-list-title {
+  margin: 0;
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+/* 제목 아래 장식선: 선 — 로고 — 선 */
+.museum-list-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px auto 10px;
+}
+
+.museum-list-divider span {
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9b48a);
+}
+
+.museum-list-divider span:last-child {
+  background: linear-gradient(90deg, #c9b48a, transparent);
+}
+
+.museum-list-divider img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 .museum-list-lead {
-  margin: 8px 0 0;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* 요약: 박물관 · 작품 수 */
+.museum-list-summary {
+  display: inline-flex;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #e8dfda;
+  border-radius: 999px;
+  background: #fbf8f4;
+}
+
+.museum-list-summary li {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 18px;
+}
+
+.museum-list-summary li + li {
+  border-left: 1px solid #e8dfda;
+}
+
+.museum-list-summary strong {
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: 18px;
+  color: #1f4d3a;
+}
+
+.museum-list-summary span {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: #6b6460;
+}
+
+@keyframes museum-list-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .museum-list-hero > * {
+    animation: none;
+  }
+}
+
+/* 좁은 화면: 요약 칸을 조금 좁게 */
+@media (max-width: 480px) {
+  .museum-list-summary li {
+    padding: 8px 12px;
+  }
 }
 
 .museum-list-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+  justify-content: center; /* 카드 묶음을 가운데로 */
   gap: 24px;
   margin: 24px 0 0;
   padding: 0;
@@ -38,7 +163,7 @@
 
 .museum-list-card img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10; /* 4:3 보다 낮게 - 카드 높이를 줄여 한 화면에 들어오게 */
   object-fit: cover;
 }
 
@@ -48,6 +173,7 @@
   flex-direction: column;
   gap: 4px;
   padding: 16px;
+  text-align: left;
 }
 
 .museum-list-name {
