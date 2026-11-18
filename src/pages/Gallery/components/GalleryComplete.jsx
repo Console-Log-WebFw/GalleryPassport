@@ -98,7 +98,12 @@ const GalleryComplete = ({ museum, total, hasPassport, onClose }) => {
             : "여권을 발급받으면 박물관 도장을 받을 수 있어요"}
         </p>
         <div className="gallery-complete-actions">
-          <Link to="/passport" className="gallery-complete-btn gallery-complete-btn--primary">
+          {/* 여권이 있으면 이 박물관 도장을 여권 화면에서 잠시 강조 (PassportPage 가 state 를 읽음) */}
+          <Link
+            to="/passport"
+            state={hasPassport ? { highlightStamp: museum.id } : undefined}
+            className="gallery-complete-btn gallery-complete-btn--primary"
+          >
             {hasPassport ? "여권 보러 가기" : "여권 발급하러 가기"}
           </Link>
           <button type="button" className="gallery-complete-btn" onClick={onClose}>

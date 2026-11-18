@@ -4,9 +4,17 @@ import { formatDate } from "../../../utils/passport";
 import StampArt from "./StampArt";
 import "./StampCard.css";
 
-/* museum: 박물관 정보, visitedAt: 방문 날짜(없으면 아직 방문 전), progress: { seen, total } 본 작품 수 */
-const StampCard = ({ museum, visitedAt, progress }) => (
-  <div className={`stamp stamp-${museum.color}` + (visitedAt ? " is-visited" : " is-empty")}>
+/* museum: 박물관 정보, visitedAt: 방문 날짜(없으면 아직 방문 전), progress: { seen, total } 본 작품 수
+   highlighted: 갤러리를 막 다 보고 넘어왔을 때 - 도장이 쾅 찍히듯 잠시 강조 */
+const StampCard = ({ museum, visitedAt, progress, highlighted = false }) => (
+  <div
+    className={
+      `stamp stamp-${museum.color}` +
+      (visitedAt ? " is-visited" : " is-empty") +
+      (highlighted ? " is-highlight" : "")
+    }
+  >
+    {highlighted && <span className="stamp-new">NEW STAMP</span>}
     <div className="stamp-inner">
       <StampArt museumId={museum.id} />
       {visitedAt ? (

@@ -10,8 +10,8 @@
   padding: 0 16px;
   box-sizing: border-box;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(8px);
+  background: #fff; /* 불투명 - 뒤의 벽과 겹쳐 보이지 않게 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   color: #222;
 }
 

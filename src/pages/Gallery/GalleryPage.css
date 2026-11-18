@@ -16,6 +16,8 @@ html.gallery-immersive .header {
   left: 0;
   right: 0;
   height: 64px;
+  background: #fbf8f4; /* 전시관 안에서는 불투명하게 - 벽이 비쳐 보이지 않게 */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   transition: transform 0.35s ease;
 }
 
