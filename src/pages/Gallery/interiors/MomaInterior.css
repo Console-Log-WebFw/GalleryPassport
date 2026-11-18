@@ -46,12 +46,14 @@
   --frame-color: #141414; /* 테두리 색 */
   --frame-border-image: linear-gradient(135deg, #3a3a3a 0%, #121212 22%, #1c1c1c 55%, #0b0b0b 78%, #2a2a2a 100%) 1;
   --frame-width: 7px; /* 테두리 두께 */
-  --frame-mat-color: #fdfcfa; /* 그림과 테두리 사이 여백 색 */
-  --frame-mat-size: 16px; /* 여백 두께 */
-  /* 매트 안쪽 음영(프레임 깊이) + 벽에서 살짝 떠 있는 접촉 그림자 + 넓고 옅은 드롭 */
+  /* 매트: 벽보다 따뜻한 미색 종이, 위가 밝고 아래로 살짝 어두워짐 (빛이 위에서 옴) */
+  --frame-mat-color: linear-gradient(170deg, #f7f4ec 0%, #efebe1 100%);
+  --frame-mat-size: 18px; /* 여백 두께 */
+  /* 프레임이 매트 위에 드리운 그림자(위·왼쪽이 짙음) + 벽에서 살짝 떠 있는 접촉 그림자 + 넓고 옅은 드롭 */
   --frame-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
-    inset 0 3px 6px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.12),
+    inset 3px 5px 9px rgba(0, 0, 0, 0.2),
+    inset -1px -1px 3px rgba(0, 0, 0, 0.06),
     0 1px 2px rgba(0, 0, 0, 0.3),
     0 6px 12px rgba(0, 0, 0, 0.1),
     0 24px 44px -10px rgba(0, 0, 0, 0.28);
@@ -66,10 +68,25 @@
 }
 
 /* ===== 작품 조명: 그림 뒤 벽에 위에서 떨어지는 스포트라이트 빛 (클릭 판정·확대에 영향 없음) ===== */
+/* 매트 베벨: 그림 둘레를 45도로 잘라 낸 매트의 흰 단면 + 단면 안팎의 가는 음영선 (그림 칸 = 액자 크기) */
+.gallery--moma .room-wall .item-image::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--frame-width) + var(--frame-mat-size) - 3px);
+  border: 3px solid #fdfcf8;
+  border-top-color: #ffffff;
+  border-bottom-color: #f1eee6;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.18),
+    inset 1px 2px 3px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
 .gallery--moma .room-wall .item-image::before {
   content: "";
   position: absolute;
-  inset: -14% 8% -6%;
+  inset: -22% -18% -10%;
   background: radial-gradient(ellipse 50% 58% at 50% 36%, #fffdf8, rgba(255, 253, 247, 0.55) 55%, transparent 76%);
   opacity: 0.75;
   pointer-events: none;
@@ -82,6 +99,8 @@
 
 /* ===== 월 라벨: 미술관 캡션처럼 작고 단정하게 (검은 짧은 선 + 제목 + 작가·연도) ===== */
 .gallery--moma .room-wall .item-desc {
+  justify-content: flex-start; /* 라벨을 액자 바로 아래에 붙임 */
+  padding-top: 24px;
   gap: 3px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing: 0.01em;
