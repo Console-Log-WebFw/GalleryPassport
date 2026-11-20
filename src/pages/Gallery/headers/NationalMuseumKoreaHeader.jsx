@@ -1,4 +1,4 @@
-/* NationalMuseumKoreaHeader.jsx: 국립중앙박물관 전시관 헤더 - 지금은 공통 헤더를 그대로 쓰고, 이 파일과 NationalMuseumKoreaHeader.css만 고쳐서 국립중앙박물관 전용 디자인으로 바꾸면 됨 */
+/* NationalMuseumKoreaHeader.jsx: 국립중앙박물관 전시관 헤더 - 공통 헤더에 한지색 바탕·갈색 테두리 디자인(NationalMuseumKoreaHeader.css)을 입혀 씀 */
 
 import GalleryHeader from "./GalleryHeader";
 import "./NationalMuseumKoreaHeader.css";
