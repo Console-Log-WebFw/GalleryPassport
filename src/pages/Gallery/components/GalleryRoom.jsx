@@ -14,10 +14,14 @@ import "./GalleryRoom.css";
 const ROOM_HEIGHT =
   "calc(100dvh - var(--header-height) - var(--gallery-top-height))";
 
-/* 방 배율: 평소 / 확대 - 확대해도 그림 위에 돋보기 버튼 자리가 남도록 확대 배율을 기본(1.5)보다 낮춤 */
+/* 방 배율: 평소 / 확대 기본값·최대 - 실제 확대 배율은 화면·그림 크기에 맞춰 fitZoomScale 이 계산 */
 const ROOM_SCALE = 1.1;
 const ROOM_SCALE_ZOOM = 1.3;
+const ROOM_SCALE_ZOOM_MAX = 4;
 const ZOOM_BUTTON_GAP = 12; // 돋보기 버튼과 그림 위쪽 사이 간격(px)
+const ZOOM_SIDE_MARGIN = 72; // 확대 시 그림 좌우에 남길 자리 (화살표 버튼)
+const ZOOM_BOTTOM_MARGIN = 16;
+const ZOOM_FRAME_PAD = 20; // 그림(img) 바깥 액자 두께 (배율 1 기준 px) - 확대해도 액자까지 화면에 들어오게
 
 const DEFAULT_ROOM_STYLES = {
   width: "100vw", // room-gallery는 % 단위를 못 씀
@@ -103,6 +107,63 @@ const GalleryRoom = ({ museum, room, facing, fromRoomId, onDoor, onFacingChange,
       `${side ? Math.max(8, imageTop) : top}px`,
     );
     wrap.style.setProperty("--zoom-btn-left", `${imageRight + ZOOM_BUTTON_GAP}px`);
+
+    /* 확대/축소 애니메이션 중이 아니면 지금 그림에 맞는 확대 배율을 미리 계산 */
+    if (!zoomTrackRef.current.until) fitZoomScale(btn.offsetHeight);
+  };
+
+  /*
+   * 돋보기 확대를 정면 그림 크기에 맞춤: 그림(액자 포함)이 화면(.room-body)의 남는 자리에 꽉 차고 가운데 오도록
+   * - 확대 배율 Z: 남는 자리(위: 돋보기 자리, 좌우: 화살표 자리, 아래: 작은 여백) ÷ 배율 1 기준 그림 크기
+   * - 그림은 방 가운데보다 위에 있으므로(아래에 라벨), 확대할 때 방을 옮겨(translate) 그림을 남는 자리 가운데에 둠
+   * - 지금 transform 행렬(배율 S, 이동 T)로 나눠 배율 1·이동 0 기준 위치로 바꿔서 계산 → 확대 중에 다른 그림으로 넘어가도 맞음
+   * - CSS 가 --room-fit-zoom / --room-fit-x / --room-fit-y 로 확대 상태의 transform 을 만듦
+   */
+  const fitZoomScale = (btnHeight) => {
+    const wrap = wrapRef.current;
+    const body = wrap?.querySelector(".room-body");
+    const wrapper = wrap?.querySelector(".room-wrapper");
+    const img = wrap?.querySelector(".room-wall.wall-active .item-image img");
+    if (!body || !wrapper || !img) return;
+
+    const transform = getComputedStyle(wrapper).transform;
+    const m = transform && transform !== "none" ? new DOMMatrixReadOnly(transform) : null;
+    const S = m ? m.a : 1;
+    const b = body.getBoundingClientRect();
+    const w = wrapper.getBoundingClientRect();
+    const t = img.getBoundingClientRect();
+    if (!S || !t.width || !t.height) return;
+
+    /* 방 가운데(확대 기준점)와, 이동 전 기준점 */
+    const cx = w.left + w.width / 2;
+    const cy = w.top + w.height / 2;
+    const originX = cx - (m ? m.e : 0);
+    const originY = cy - (m ? m.f : 0);
+
+    /* 배율 1 기준: 그림(+액자) 크기, 기준점에서 그림 가운데까지 거리 */
+    const imgW = t.width / S + ZOOM_FRAME_PAD * 2;
+    const imgH = t.height / S + ZOOM_FRAME_PAD * 2;
+    const dx = ((t.left + t.right) / 2 - cx) / S;
+    const dy = ((t.top + t.bottom) / 2 - cy) / S;
+
+    /* 그림이 들어갈 자리 */
+    const top = b.top + btnHeight + ZOOM_BUTTON_GAP * 2;
+    const bottom = b.bottom - ZOOM_BOTTOM_MARGIN;
+    const side = Math.min(ZOOM_SIDE_MARGIN, b.width * 0.1); // 좁은 화면(휴대폰)에서는 좌우 자리를 화면 폭에 맞춰 줄임
+    const left = b.left + side;
+    const right = b.right - side;
+
+    /* 화면에 들어가는 만큼만 확대 (좁은 화면에서는 평소 배율보다 작아지지만 않게) */
+    const fit = Math.min((bottom - top) / imgH, (right - left) / imgW);
+    const zoom = Math.min(ROOM_SCALE_ZOOM_MAX, Math.max(ROOM_SCALE, fit));
+    if (!Number.isFinite(zoom)) return;
+
+    /* 확대한 그림 가운데가 남는 자리 가운데에 오도록 이동 */
+    const moveX = (left + right) / 2 - originX - zoom * dx;
+    const moveY = (top + bottom) / 2 - originY - zoom * dy;
+    wrap.style.setProperty("--room-fit-zoom", zoom.toFixed(3));
+    wrap.style.setProperty("--room-fit-x", `${moveX.toFixed(1)}px`);
+    wrap.style.setProperty("--room-fit-y", `${moveY.toFixed(1)}px`);
   };
 
   /* 이벤트·관찰자 안에서는 ref 로 최신 함수를 부름 */
