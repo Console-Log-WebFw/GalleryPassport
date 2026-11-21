@@ -4,6 +4,9 @@
 .museum-list-page {
   margin-top: calc(-1 * var(--header-height, 0px));
   padding-top: var(--header-height, 0px);
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 1px; /* 아래쪽 판 여백(margin)이 밖으로 새지 않게 */
   min-height: 100vh;
   box-sizing: border-box;
   background: #f6f1ea url("../../../assets/images/home/bg_gallery-entry.png") center / cover no-repeat; /* 이미지가 안 뜰 때를 대비한 바탕색 */
@@ -11,9 +14,21 @@
 
 .museum-list {
   max-width: 1100px;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 20px 32px 24px; /* 한 화면(약 900px)에 스크롤 없이 들어오도록 위아래 여백을 줄임 */
   text-align: center;
+  /* 안내 문구·카드 뒤 반투명 흰 판: 배경 이미지 위에서도 글씨가 잘 읽히게 */
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 480px) {
+  .museum-list {
+    padding: 20px 16px 24px;
+  }
 }
 
 /* ===== 머리말: 홈 화면 소개 문구(작은 글씨 → 세리프 큰 제목 → 설명)와 같은 톤 ===== */

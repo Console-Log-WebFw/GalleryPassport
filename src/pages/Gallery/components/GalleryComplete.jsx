@@ -94,7 +94,7 @@ const GalleryComplete = ({ museum, total, hasPassport, onClose }) => {
         </p>
         <p className="gallery-complete-stamp">
           {hasPassport
-            ? "🛂 여권에 도장이 찍혔어요"
+            ? "여권에 도장이 찍혔어요"
             : "여권을 발급받으면 박물관 도장을 받을 수 있어요"}
         </p>
         <div className="gallery-complete-actions">
