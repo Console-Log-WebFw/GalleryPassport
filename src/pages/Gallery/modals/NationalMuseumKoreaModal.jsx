@@ -1,4 +1,4 @@
-/* NationalMuseumKoreaModal.jsx: 국립중앙박물관 작품 모달 - 한지 바탕, 큰 그림 위 / 설명 아래, 제목 옆 붉은 낙관, 명조 글꼴
+/* NationalMuseumKoreaModal.jsx: 국립중앙박물관 작품 모달 - 한지 바탕, 큰 그림 왼쪽 / 설명 오른쪽, 제목 옆 붉은 낙관, 명조 글꼴
    직접 만든 구조 - 공통 동작(ESC 닫기, 문단 나누기, 이미지 주소)은 기본 모달과 같은 함수를 씀 */
 
 import { createPortal } from "react-dom";
